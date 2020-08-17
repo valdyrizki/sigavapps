@@ -6,7 +6,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-  <title>SIGAV APPS | Dashboard 2</title>
+  <title>SIGAV APPS | Dashboard</title>
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="{{asset("assets/plugins/fontawesome-free/css/all.min.css")}}">
@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="{{asset("assets/dist/css/adminlte.min.css")}}">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
 
 <!-- jQuery -->
 <script src="{{asset("assets/plugins/jquery/jquery.min.js")}}"></script>
@@ -49,6 +50,9 @@
 
 <!-- PAGE SCRIPTS -->
 <script src="{{asset("assets/dist/js/pages/dashboard2.js")}}"></script>
+
+<!-- date-range-picker -->
+<script src="{{asset("assets/plugins/daterangepicker/daterangepicker.js")}}"></script>
 
 </head>
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -170,7 +174,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="/">Home</a></li>
               <li class="breadcrumb-item active">Dashboard v2</li>
             </ol>
           </div><!-- /.col -->

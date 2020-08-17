@@ -18,11 +18,11 @@
                                 <div class="form-group">
                                 <label>Kategori Produk</label>
                                 <select class="form-control" name="kategori_produk" id="kategori_produk">
-                                    <option value="0" disabled selected>--- Pilih Kategori ---</option>
+                                    <option value="0" selected>--- Custom Order ---</option>
                                     @foreach ($kategori as $k)
                                         <option value="{{$k->id}}">{{$k->id}} - {{$k->nama_kategori}}</option>
                                     @endforeach
-                                        <option value="99">Custom Order</option>
+
                                 </select>
                                 </div>
                             </div>
@@ -32,7 +32,6 @@
                                 <div class="form-group">
                                 <label>Nama Produk</label>
                                 <select class="form-control" name="nama_produk" id="nama_produk">
-                                        <option disabled selected>--- Pilih Produk ---</option>
                                 </select>
                                 </div>
                             </div>
@@ -48,7 +47,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                 <label>Harga Produk</label>
-                                <input type="number" class="form-control" name="harga_jual" id="harga_jual" readonly>
+                                <input type="number" class="form-control" name="harga_jual" id="harga_jual" >
                                 </div>
                             </div>
 
@@ -56,6 +55,14 @@
                                 <div class="form-group">
                                 <label>Stok Produk</label>
                                 <input type="number" class="form-control" name="stok" id="stok" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                <label>Deskripsi Produk</label>
+                                <textarea class="form-control" name="deskripsi_produk" id="deskripsi_produk" readonly="readonly"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -144,24 +151,44 @@ $(document).ready(function() {
 
         total_belanja += parseInt(total);
         $("#total_belanja").html("Total : "+total_belanja);
+        afterGenerate();
     } );
 
     $("#kategori_produk").change(function () {
         let id_kategori = $('#kategori_produk').val();
-        // if(id_kategori == 99){
-        //     return;
-        // }
-        $.getJSON("/produk/getProdukByKategori/"+id_kategori, function(json){
-            produk = json;
-            $('#nama_produk').empty();
-            $('#nama_produk').append($('<option disabled selected>').text("--- Pilih Produk ---"));
-            $.each(json, function(i, obj){
-                $('#nama_produk').append($('<option>').text(obj.nama_produk).attr({
-                    value: obj.id,
-                    name: obj.nama_produk
-                }));
+        $('#nama_produk').empty();
+        $('#nama_produk').append($('<option disabled selected>').text("--- Pilih Produk ---"));
+        if(id_kategori == 0){   //Jika custom order
+            $.getJSON("/produk/getAllProduk", function(json){
+                produk = json;
+                $.each(json, function(i, obj){
+                    $('#nama_produk').append($('<option>').text(obj.nama_produk).attr({
+                        value: obj.id,
+                        name: obj.nama_produk
+                    }));
+                });
             });
-        });
+            $('#harga_jual').attr('readonly',false);
+            $('#jumlah_beli').val(1);
+            $('#harga_jual').val('');
+            $('#stok').val('');
+            $('#deskripsi_produk').val('');
+        }else{
+            $.getJSON("/produk/getProdukByKategori/"+id_kategori, function(json){
+                produk = json;
+                $.each(json, function(i, obj){
+                    $('#nama_produk').append($('<option>').text(obj.nama_produk).attr({
+                        value: obj.id,
+                        name: obj.nama_produk
+                    }));
+                });
+            });
+            $('#harga_jual').attr('readonly',true)
+            $('#jumlah_beli').val(1);
+            $('#harga_jual').val('');
+            $('#stok').val('');
+            $('#deskripsi_produk').val('');
+        }
     });
 
 
@@ -171,8 +198,10 @@ $(document).ready(function() {
             if (produk[i].id == id_produk){
                 $('#harga_jual').val(produk[i].harga_jual);
                 $('#stok').val(produk[i].stok);
+                $('#deskripsi_produk').val(produk[i].deskripsi);
             }
         }
+
     });
 
     $("#btnSaveData").on('click',function () {
@@ -194,7 +223,6 @@ $(document).ready(function() {
                 $("#kategori_produk").val(0);
 
                 $('#nama_produk').empty();
-                $('#nama_produk').append($('<option disabled selected>').text("--- Pilih Produk ---"));
 
                 $('#harga_jual').val('');
                 $('#stok').val('');
@@ -203,12 +231,49 @@ $(document).ready(function() {
                 dttable.clear().draw();
                 total_belanja = 0;
                 $("#total_belanja").html("Total : "+total_belanja);
+                afterGenerate();
              },
             // contentType: "application/json",
             dataType: 'JSON'
         });
 
     });
+
+    function afterGenerate(){
+        $("#deskripsi_produk").val("");
+        $("#kategori_produk").val(0);
+        $('#nama_produk').empty();
+        $('#harga_jual').val('');
+        $('#harga_jual').attr('readonly',false)
+        $('#stok').val('');
+        $('#jumlah_beli').val(1);
+        $('#nama_produk').append($('<option disabled selected>').text("--- Pilih Produk ---"));
+        $.getJSON("/produk/getAllProduk", function(json){
+                produk = json;
+                $.each(json, function(i, obj){
+                    $('#nama_produk').append($('<option>').text(obj.nama_produk).attr({
+                        value: obj.id,
+                        name: obj.nama_produk
+                    }));
+                });
+            });
+    }
+
+    function doReset(){
+        $("#deskripsi_produk").val("");
+        $("#kategori_produk").val(0);
+        $('#nama_produk').empty();
+        $('#harga_jual').val('');
+        $('#harga_jual').attr('readonly',false)
+        $('#stok').val('');
+        $('#jumlah_beli').val(1);
+        dttable.clear().draw();
+        total_belanja = 0;
+        $("#total_belanja").html("Total : "+total_belanja);
+        afterGenerate();
+    }
+
+    afterGenerate();
 
 
 

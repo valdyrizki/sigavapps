@@ -1,7 +1,7 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="/" class="brand-link">
       <img src="{{asset("assets/dist/img/AdminLTELogo.png")}}" alt="SIGAV Logo" class="brand-image img-circle elevation-3"
            style="opacity: .8">
       <span class="brand-text font-weight-light">SIGAV APPS</span>
@@ -32,13 +32,28 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="/transaksi" class="nav-link">
-              <i class="nav-icon fas fa-book"></i>
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-dolly-flatbed"></i>
               <p>
                 Transaksi
+                <i class="fas fa-angle-left right"></i>
               </p>
             </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="/transaksi" class="nav-link">
+                  <i class="far fa-product nav-icon"></i>
+                  <p>Penjualan</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/pengeluaran" class="nav-link">
+                  <i class="far fa-category nav-icon"></i>
+                  <p>Pengeluaran</p>
+                </a>
+              </li>
+            </ul>
           </li>
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
@@ -59,6 +74,35 @@
                 <a href="/produk/kategori" class="nav-link">
                   <i class="far fa-category nav-icon"></i>
                   <p>Kategori Produk</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/stok" class="nav-link">
+                  <i class="far fa-category nav-icon"></i>
+                  <p>Tambah Stok Barang</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Laporan
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="/laporan/penjualan" class="nav-link">
+                  <i class="far fa-credit-card nav-icon"></i>
+                  <p>Laporan Penjualan</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/laporan/keuangan" class="nav-link">
+                  <i class="far fa-money-bill-alt nav-icon"></i>
+                  <p>Laporan Keuangan</p>
                 </a>
               </li>
             </ul>

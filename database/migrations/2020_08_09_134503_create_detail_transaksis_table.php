@@ -19,6 +19,7 @@ class CreateDetailTransaksisTable extends Migration
             $table->integer("id_produk");
             $table->integer("jumlah");
             $table->integer("total_harga");
+            $table->text("deskripsi_transaksi")->nullable();
             $table->timestamps();
         });
     }

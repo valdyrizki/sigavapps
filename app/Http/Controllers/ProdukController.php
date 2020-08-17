@@ -23,8 +23,14 @@ class ProdukController extends Controller
 
     public function getProdukByKategori($id_kategori)
     {
-        $produkByKategori = Produk::where("id_kategori",$id_kategori)->get();
+        $produkByKategori = Produk::where("id_kategori",$id_kategori)->orderBy('nama_produk', 'asc')->get();
         return $produkByKategori;
+    }
+
+    public function getAllProduk()
+    {
+        $allProduk = Produk::orderBy('nama_produk', 'asc')->get();
+        return $allProduk;
     }
 
     // KATEGORI
@@ -40,4 +46,19 @@ class ProdukController extends Controller
         return redirect("/produk/kategori");
     }
 
+    public function stok(){
+        $kategori = Kategori::select('id','nama_kategori')->get();
+        return view("produk.stok",compact("kategori"));
+    }
+
+    public function addStok()
+    {
+        $produk = Produk::find(request()->id_produk);
+        $produk->stok = $produk->stok + request()->tambah_stok;
+        $produk->save();
+
+        return response()->json([
+            'message' => 'Tambah Stok Berhasil'
+        ]);
+    }
 }
