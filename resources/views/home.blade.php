@@ -3,6 +3,86 @@
 
 @section('content')
 
+<script>
+    $(function () {
+
+'use strict'
+
+/* ChartJS
+ * -------
+ * Here we will create a few charts using ChartJS
+ */
+
+//-----------------------
+//- DAILY SALES CHART -
+//-----------------------
+
+// Get context with jQuery - using jQuery's .get() method.
+var salesChartCanvas = $('#salesChart').get(0).getContext('2d')
+
+var salesChartData = {
+  labels  : ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
+  datasets: [
+    {
+      label               : 'Digital Goods',
+      backgroundColor     : 'rgba(60,141,188,0.9)',
+      borderColor         : 'rgba(60,141,188,0.8)',
+      pointRadius          : false,
+      pointColor          : '#3b8bba',
+      pointStrokeColor    : 'rgba(60,141,188,1)',
+      pointHighlightFill  : '#fff',
+      pointHighlightStroke: 'rgba(60,141,188,1)',
+      data                : [300000, 400000, 200000, 800000, 600000, 1000000, 500000]
+    },
+    {
+      label               : 'Electronics',
+      backgroundColor     : 'rgba(210, 214, 222, 1)',
+      borderColor         : 'rgba(210, 214, 222, 1)',
+      pointRadius         : false,
+      pointColor          : 'rgba(210, 214, 222, 1)',
+      pointStrokeColor    : '#c1c7d1',
+      pointHighlightFill  : '#fff',
+      pointHighlightStroke: 'rgba(220,220,220,1)',
+      data                : [30000, 50000, 40000, 70000, 50000, 100000, 40]
+    },
+  ]
+}
+
+var salesChartOptions = {
+  maintainAspectRatio : false,
+  responsive : true,
+  legend: {
+    display: false
+  },
+  scales: {
+    xAxes: [{
+      gridLines : {
+        display : false,
+      }
+    }],
+    yAxes: [{
+      gridLines : {
+        display : false,
+      }
+    }]
+  }
+}
+
+// This will get the first returned node in the jQuery collection.
+var salesChart = new Chart(salesChartCanvas, {
+    type: 'line',
+    data: salesChartData,
+    options: salesChartOptions
+  }
+)
+
+//---------------------------
+//- END MONTHLY SALES CHART -
+//---------------------------
+
+})
+</script>
+
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
@@ -13,9 +93,9 @@
             <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Penjualan Hari Ini</span>
+              <span class="info-box-text">Omset Hari Ini</span>
               <span class="info-box-number">
-                10
+                @currency($sellDay->total_omset)
               </span>
             </div>
             <!-- /.info-box-content -->
@@ -29,7 +109,7 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Perkiraan Keuntungan</span>
-              <span class="info-box-number">41.410</span>
+              <span class="info-box-number">@currency($profit)</span>
             </div>
             <!-- /.info-box-content -->
           </div>
@@ -45,8 +125,8 @@
             <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Total Produk</span>
-              <span class="info-box-number">40</span>
+              <span class="info-box-text">Total Produk Terjual</span>
+              <span class="info-box-number">{{$sellDay->total_produk == 0 ? 0 : $sellDay->total_produk}}</span>
             </div>
             <!-- /.info-box-content -->
           </div>
@@ -59,7 +139,7 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Total Saldo</span>
-              <span class="info-box-number">2.000.000</span>
+              <span class="info-box-number">@currency($finance->balance)</span>
             </div>
             <!-- /.info-box-content -->
           </div>
@@ -232,53 +312,23 @@
                 <table class="table m-0">
                   <thead>
                   <tr>
-                    <th>Order ID</th>
-                    <th>Item</th>
-                    <th>Status</th>
-                    <th>Popularity</th>
+                    <th>TRX ID</th>
+                    <th>Produk</th>
+                    <th>Jumlah</th>
+                    <th>Total Harga</th>
+                    <th>Tanggal</th>
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                    <td>Call of Duty IV</td>
-                    <td><span class="badge badge-success">Shipped</span></td>
-                    <td>
-                      <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                    <td>iPhone 6 Plus</td>
-                    <td><span class="badge badge-danger">Delivered</span></td>
-                    <td>
-                      <div class="sparkbar" data-color="#f56954" data-height="20">90,-80,90,70,-61,83,63</div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><a href="pages/examples/invoice.html">OR1848</a></td>
-                    <td>Samsung Smart TV</td>
-                    <td><span class="badge badge-warning">Pending</span></td>
-                    <td>
-                      <div class="sparkbar" data-color="#f39c12" data-height="20">90,80,-90,70,61,-83,68</div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                    <td>iPhone 6 Plus</td>
-                    <td><span class="badge badge-danger">Delivered</span></td>
-                    <td>
-                      <div class="sparkbar" data-color="#f56954" data-height="20">90,-80,90,70,-61,83,63</div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                    <td>Call of Duty IV</td>
-                    <td><span class="badge badge-success">Shipped</span></td>
-                    <td>
-                      <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
-                    </td>
-                  </tr>
+                      @foreach ($lastTrx as $lt)
+                        <tr>
+                            <td><span class="badge badge-success">{{$lt->id}}</span></td>
+                            <td>{{$lt->total_harga > 0 ? $lt->nama_produk : $lt->deskripsi_transaksi}}</td>
+                            <td>{{$lt->jumlah}}</td>
+                            <td>@currency($lt->total_harga)</td>
+                            <td>{{$lt->created_at}}</td>
+                        </tr>
+                      @endforeach
                   </tbody>
                 </table>
               </div>
@@ -286,8 +336,8 @@
             </div>
             <!-- /.card-body -->
             <div class="card-footer clearfix">
-              <a href="javascript:void(0)" class="btn btn-sm btn-info float-left">Place New Order</a>
-              <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">View All Orders</a>
+              <a href="/transaksi" class="btn btn-sm btn-info float-left">Transaksi Baru</a>
+              <a href="/laporan/penjualan" class="btn btn-sm btn-secondary float-right">Lihat Riwayat Transaksi</a>
             </div>
             <!-- /.card-footer -->
           </div>

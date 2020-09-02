@@ -36,22 +36,18 @@
 <!-- AdminLTE App -->
 <script src="{{asset("assets/dist/js/adminlte.js")}}"></script>
 
-<!-- OPTIONAL SCRIPTS -->
-<script src="{{asset("assets/dist/js/demo.js")}}"></script>
-
 <!-- PAGE PLUGINS -->
-<!-- jQuery Mapael -->
-<script src="{{asset("assets/plugins/jquery-mousewheel/jquery.mousewheel.js")}}"></script>
-<script src="{{asset("assets/plugins/raphael/raphael.min.js")}}"></script>
-<script src="{{asset("assets/plugins/jquery-mapael/jquery.mapael.min.js")}}"></script>
-<script src="{{asset("assets/plugins/jquery-mapael/maps/usa_states.min.js")}}"></script>
+
 <!-- ChartJS -->
 <script src="{{asset("assets/plugins/chart.js/Chart.min.js")}}"></script>
 
-<!-- PAGE SCRIPTS -->
-<script src="{{asset("assets/dist/js/pages/dashboard2.js")}}"></script>
+<!-- SELECT2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
-<!-- date-range-picker -->
+<!-- Daterangepicker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+<link rel="stylesheet" href="{{asset("assets/plugins/daterangepicker/daterangepicker.css")}}">
 <script src="{{asset("assets/plugins/daterangepicker/daterangepicker.js")}}"></script>
 
 </head>

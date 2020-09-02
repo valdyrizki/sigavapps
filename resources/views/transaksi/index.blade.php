@@ -3,6 +3,18 @@
 
 @section('content')
 
+<style>
+    .select2-selection__rendered {
+    line-height: 30px !important;
+}
+    .select2-container .select2-selection--single {
+        height: 38px !important;
+    }
+    .select2-selection__arrow {
+        height: 38px !important;
+    }
+</style>
+
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
@@ -31,7 +43,7 @@
                                 <!-- select -->
                                 <div class="form-group">
                                 <label>Nama Produk</label>
-                                <select class="form-control" name="nama_produk" id="nama_produk">
+                                <select class="form-control" height="48" name="nama_produk" id="nama_produk">
                                 </select>
                                 </div>
                             </div>
@@ -80,12 +92,18 @@
                 <div class="col-sm-6">
                     <div class="card py-3 px-3">
 
-                        <div class="col-sm-12">
-                            <h2 class="col-sm-12" id="total_belanja"></h2>
+                        <h2 class="col-sm-12" id="total_belanja"></h2>
+                        <input type="number" name="moneyInput" id="moneyInput" class="form-control col-sm-12" disabled>
+                        <div class="row mt-1">
+                            <button type="button" class="btn btn-success col-sm-2 mr-3 btn-xs" id="m5000" disabled>@currency(5000)</button>
+                            <button type="button" class="btn btn-success col-sm-2 mr-3 btn-xs" id="m10000" disabled>@currency(10000)</button>
+                            <button type="button" class="btn btn-success col-sm-2 mr-3 btn-xs" id="m20000" disabled>@currency(20000)</button>
+                            <button type="button" class="btn btn-success col-sm-2 mr-3 btn-xs" id="m50000" disabled>@currency(50000)</button>
+                            <button type="button" class="btn btn-success col-sm-2 mr-3 btn-xs" id="m100000" disabled>@currency(100000)</button>
                         </div>
 
+                        <h2 class="col-sm-12" id="kembalian"></h2>
                         <button type="button" class="col-sm-12 btn btn-primary mt-2" id="btnSaveData">Proses Transaksi</button>
-
 
                         <div class="col-sm-12">
                                 <table id="cart" class="table table-bordered table-hover text-center" style="width:100%">
@@ -110,6 +128,7 @@
     <script>
 
 $(document).ready(function() {
+    $('#nama_produk').select2();
     let saveData = [];
     let detailTransaksi = [];
     let produk = [];
@@ -132,6 +151,16 @@ $(document).ready(function() {
         let harga = $("#harga_jual").val();
         let total = qty*harga;
 
+        if(!idProduk){
+            alert("Pilih produk terlebih dahulu");
+            return;
+        }
+
+        if (harga <= 0){
+            alert("Harga tidak boleh 0 atau minus");
+            return;
+        }
+
         dttable.row.add( [
             nmProduk,
             qty,
@@ -151,8 +180,15 @@ $(document).ready(function() {
 
         total_belanja += parseInt(total);
         $("#total_belanja").html("Total : "+total_belanja);
+        $('#moneyInput').removeAttr("disabled").val(0);
+        $('#m5000').removeAttr("disabled");
+        $('#m10000').removeAttr("disabled");
+        $('#m20000').removeAttr("disabled");
+        $('#m50000').removeAttr("disabled");
+        $('#m100000').removeAttr("disabled");
         afterGenerate();
     } );
+
 
     $("#kategori_produk").change(function () {
         let id_kategori = $('#kategori_produk').val();
@@ -196,15 +232,90 @@ $(document).ready(function() {
         let id_produk = $('#nama_produk').val();
         for (var i = 0; i < produk.length; i++){
             if (produk[i].id == id_produk){
-                $('#harga_jual').val(produk[i].harga_jual);
+                let hargaJual = produk[i].harga_jual;
+                $('#harga_jual').val(hargaJual);
                 $('#stok').val(produk[i].stok);
                 $('#deskripsi_produk').val(produk[i].deskripsi);
             }
         }
+    });
 
+    $('#moneyInput').keyup(function(){
+        var input = $(this).val();
+        var hasil = total_belanja-input;
+        if(hasil <= 0){
+            $('#kembalian').text('Kembalian : '+hasil*-1);
+        }else{
+            $('#kembalian').text("");
+        }
+    });
+
+    $('#m5000').on('click',function (){
+        let moneyInput = $('#moneyInput').val();
+        $('#moneyInput').val(parseInt(moneyInput)+5000);
+        var input = $('#moneyInput').val();
+        var hasil = total_belanja-input;
+        if(hasil <= 0){
+            $('#kembalian').text('Kembalian : '+hasil*-1);
+        }else{
+            $('#kembalian').text("");
+        }
+    });
+
+    $('#m10000').on('click',function (){
+        let moneyInput = $('#moneyInput').val();
+        $('#moneyInput').val(parseInt(moneyInput)+10000);
+        var input = $('#moneyInput').val();
+        var hasil = total_belanja-input;
+        if(hasil <= 0){
+            $('#kembalian').text('Kembalian : '+hasil*-1);
+        }else{
+            $('#kembalian').text("");
+        }
+    });
+
+    $('#m20000').on('click',function (){
+        let moneyInput = $('#moneyInput').val();
+        $('#moneyInput').val(parseInt(moneyInput)+20000);
+        var input = $('#moneyInput').val();
+        var hasil = total_belanja-input;
+        if(hasil <= 0){
+            $('#kembalian').text('Kembalian : '+hasil*-1);
+        }else{
+            $('#kembalian').text("");
+        }
+    });
+
+    $('#m50000').on('click',function (){
+        let moneyInput = $('#moneyInput').val();
+        $('#moneyInput').val(parseInt(moneyInput)+50000);
+        var input = $('#moneyInput').val();
+        var hasil = total_belanja-input;
+        if(hasil <= 0){
+            $('#kembalian').text('Kembalian : '+hasil*-1);
+        }else{
+            $('#kembalian').text("");
+        }
+    });
+
+    $('#m100000').on('click',function (){
+        let moneyInput = $('#moneyInput').val();
+        $('#moneyInput').val(parseInt(moneyInput)+100000);
+        var input = $('#moneyInput').val();
+        var hasil = total_belanja-input;
+        if(hasil <= 0){
+            $('#kembalian').text('Kembalian : '+hasil*-1);
+        }else{
+            $('#kembalian').text("");
+        }
     });
 
     $("#btnSaveData").on('click',function () {
+        if (!confirm('Apakah transaksi sudah benar ?')) return;
+        if (dttable.data().count() < 1 ) {
+            alert( 'Input Transaksi Terlebih Dahulu' );
+            return;
+        }
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -230,7 +341,15 @@ $(document).ready(function() {
 
                 dttable.clear().draw();
                 total_belanja = 0;
-                $("#total_belanja").html("Total : "+total_belanja);
+                $("#total_belanja").text("");
+                detailTransaksi = [];
+                $('#moneyInput').val("").prop("disabled",true);
+                $('#kembalian').text("")
+                $('#m5000').prop("disabled",true);
+                $('#m10000').prop("disabled",true);
+                $('#m20000').prop("disabled",true);
+                $('#m50000').prop("disabled",true);
+                $('#m100000').prop("disabled",true);
                 afterGenerate();
              },
             // contentType: "application/json",
@@ -274,12 +393,7 @@ $(document).ready(function() {
     }
 
     afterGenerate();
-
-
-
 } );
-
-
     </script>
 
   </section>

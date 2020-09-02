@@ -20,6 +20,7 @@ class CreateDetailTransaksisTable extends Migration
             $table->integer("jumlah");
             $table->integer("total_harga");
             $table->text("deskripsi_transaksi")->nullable();
+            $table->tinyInteger("status")->default(1);
             $table->timestamps();
         });
     }

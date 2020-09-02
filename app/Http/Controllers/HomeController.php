@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Finance;
 use App\Produk;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -16,8 +17,10 @@ class HomeController extends Controller
         (SELECT B.nama_produk from produk B WHERE B.id = A.id_produk) as nama_produk,
         A.jumlah,
         A.total_harga,
-        A.created_at
+        A.created_at,
+        A.deskripsi_transaksi
         FROM detail_transaksi A
+        WHERE A.status = 1
         ORDER BY A.id
         DESC
         LIMIT 10");
@@ -28,6 +31,7 @@ class HomeController extends Controller
         count(id) as totalTrx
         FROM detail_transaksi
         WHERE DATE(created_at) = '".$today."'
+        AND status = 1
         ");
 
         $profit = DB::select("
@@ -37,17 +41,20 @@ class HomeController extends Controller
                 (A.total_harga-(SELECT ((B.harga_modal*A.jumlah)) as profit from produk B
                 WHERE B.id = A.id_produk )) as profit
         FROM detail_transaksi A
-        WHERE DATE(A.created_at) = '".$today."' ) Z
+        WHERE DATE(A.created_at) = '".$today."'
+        AND A.status = 1 ) Z
         ");
 
         $produk = Produk::select('nama_produk','distributor','stok')->where('stok','<','10')->get();
+        $finance = Finance::select('balance')->first();
 
 
         $data = [
             'profit' => $profit[0]->profit,
             'lastTrx' => $lastTrx,
             'sellDay' => $sellDay[0],
-            'produk' => $produk
+            'produk' => $produk,
+            'finance' => $finance
         ];
 
         return view('home')->with($data);

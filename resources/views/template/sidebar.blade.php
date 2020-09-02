@@ -82,6 +82,12 @@
                   <p>Tambah Stok Barang</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="/produk/edit" class="nav-link">
+                  <i class="far fa-category nav-icon"></i>
+                  <p>Edit Barang</p>
+                </a>
+              </li>
             </ul>
           </li>
           <li class="nav-item has-treeview">

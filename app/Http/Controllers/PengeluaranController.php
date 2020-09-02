@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DetailTransaksi;
+use App\Finance;
 use App\Kategori;
 use App\Produk;
 use App\Transaksi;
@@ -18,9 +19,18 @@ class PengeluaranController extends Controller
 
     public function insert()
     {
+        $finance = Finance::first();
+        $balance = $finance->balance + request()->jumlah_pengeluaran*-1;
+
         $trx = Transaksi::create([
-            'total_harga' => request()->jumlah_pengeluaran*-1
+            'total_harga' => request()->jumlah_pengeluaran*-1,
+            'balance_before' => $finance->balance,
+            'balance_after' => $balance
         ]);
+
+        $finance->balance = $balance;
+        $finance->expense += request()->jumlah_pengeluaran;
+        $finance->save();
 
             DetailTransaksi::create([
                 'id_transaksi' => $trx->id,

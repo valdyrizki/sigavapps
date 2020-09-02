@@ -14,9 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 //DEFAULT / HOME
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', 'HomeController@index');
 
 // TRANSAKSI
 Route::get('/transaksi',"TransaksiController@index");
@@ -31,6 +29,9 @@ Route::get('/produk',"ProdukController@index");
 Route::post('/produk/insert',"ProdukController@insert");
 Route::get('/produk/getProdukByKategori/{id_kategori}',"ProdukController@getProdukByKategori");
 Route::get('/produk/getAllProduk',"ProdukController@getAllProduk");
+Route::get('/produk/edit',"ProdukController@editProduk");
+Route::POST('/produk/update',"ProdukController@updateProduk");
+
 
 
 //STOK
@@ -43,3 +44,7 @@ Route::post('/produk/insertkategori',"ProdukController@insertKategori");
 
 //LAPORAN
 Route::get('/laporan/penjualan',"LaporanController@penjualan");
+Route::POST('/laporan/penjualan',"LaporanController@getReportPenjualan");
+
+//REFUND
+Route::POST('/refund/',"RefundController@refund");

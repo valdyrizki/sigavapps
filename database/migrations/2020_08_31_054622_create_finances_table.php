@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTransaksisTable extends Migration
+class CreateFinancesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateTransaksisTable extends Migration
      */
     public function up()
     {
-        Schema::create('transaksi', function (Blueprint $table) {
+        Schema::create('finance', function (Blueprint $table) {
             $table->id();
-            $table->integer("total_harga");
-            $table->integer("balance_before");
-            $table->integer("balance_after");
+            $table->string('branch_id')->nullable(TRUE);
+            $table->integer('income')->default(0);
+            $table->integer('expense')->default(0);
+            $table->integer('balance')->default(0);
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateTransaksisTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transaksi');
+        Schema::dropIfExists('finance');
     }
 }

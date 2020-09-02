@@ -50,8 +50,10 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($transaksi as $trx)
+                                    <tr>
                                         <td>{{$trx->deskripsi_transaksi}}</td>
                                         <td>{{$trx->total_harga}}</td>
+                                    </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -98,7 +100,7 @@ $(document).ready(function() {
 
                 dttable.row.add( [
                     deskripsi_pengeluaran,
-                    jumlah_pengeluaran
+                    jumlah_pengeluaran*-1
                 ] ).draw( false );
 
                 afterGenerate();
