@@ -8,12 +8,13 @@ use App\Kategori;
 use App\Produk;
 use App\Transaksi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PengeluaranController extends Controller
 {
     public function index()
     {
-        $transaksi = DetailTransaksi::select('total_harga','deskripsi_transaksi')->where('total_harga','<',0)->get();
+        $transaksi = DetailTransaksi::select('total_harga','deskripsi_transaksi','created_at')->where('total_harga','<',0)->get();
         return view("pengeluaran.index",compact("transaksi"));
     }
 
@@ -25,7 +26,8 @@ class PengeluaranController extends Controller
         $trx = Transaksi::create([
             'total_harga' => request()->jumlah_pengeluaran*-1,
             'balance_before' => $finance->balance,
-            'balance_after' => $balance
+            'balance_after' => $balance,
+            'user' => Auth::user()->email
         ]);
 
         $finance->balance = $balance;

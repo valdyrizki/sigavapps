@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTransaksisTable extends Migration
+class CreateEodsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateTransaksisTable extends Migration
      */
     public function up()
     {
-        Schema::create('transaksi', function (Blueprint $table) {
+        Schema::create('eod', function (Blueprint $table) {
             $table->id();
-            $table->integer("total_harga");
-            $table->integer("balance_before");
-            $table->integer("balance_after");
-            $table->string('user')->default("admin");
-            $table->integer("id_eod")->default(0);
+            $table->integer('omset');
+            $table->integer('profit');
+            $table->integer('sell');
+            $table->integer('saldo_akhir');
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ class CreateTransaksisTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transaksi');
+        Schema::dropIfExists('eod');
     }
 }

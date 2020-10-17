@@ -26,12 +26,15 @@ class HomeController extends Controller
         LIMIT 10");
 
         $sellDay = DB::select("
-        SELECT sum(total_harga) as total_omset,
-        sum(jumlah) as total_produk,
-        count(id) as totalTrx
-        FROM detail_transaksi
-        WHERE DATE(created_at) = '".$today."'
-        AND status = 1
+        SELECT sum(A.total_harga) as total_omset,
+        sum(A.jumlah) as total_produk,
+        count(A.id) as totalTrx
+        FROM transaksi B
+        INNER JOIN detail_transaksi A
+        ON A.id_transaksi = B.id
+        WHERE B.id_eod = 0
+        AND A.status = 1
+        AND A.total_harga > 0
         ");
 
         $profit = DB::select("
@@ -41,11 +44,19 @@ class HomeController extends Controller
                 (A.total_harga-(SELECT ((B.harga_modal*A.jumlah)) as profit from produk B
                 WHERE B.id = A.id_produk )) as profit
         FROM detail_transaksi A
-        WHERE DATE(A.created_at) = '".$today."'
+        INNER JOIN transaksi C
+        ON A.id_transaksi = C.id
+        WHERE C.id_eod = 0
         AND A.status = 1 ) Z
         ");
 
-        $produk = Produk::select('nama_produk','distributor','stok')->where('stok','<','10')->get();
+        $refund = DB::select("
+        SELECT C.nama_produk, A.deskripsi_refund, A.created_at FROM refund A
+        INNER JOIN detail_transaksi B ON A.id_detailtransaksi = B.id
+        INNER JOIN produk C ON B.id_produk = C.id LIMIT 0,10
+        ");
+
+        $produk = Produk::select('nama_produk','distributor','stok')->where('stok','<','10')->orderBy('stok')->get();
         $finance = Finance::select('balance')->first();
 
 
@@ -54,7 +65,8 @@ class HomeController extends Controller
             'lastTrx' => $lastTrx,
             'sellDay' => $sellDay[0],
             'produk' => $produk,
-            'finance' => $finance
+            'finance' => $finance,
+            'refund' => $refund
         ];
 
         return view('home')->with($data);

@@ -23,7 +23,9 @@ class CreateProduksTable extends Migration
             $table->integer("diskon")->nullable();
             $table->string("distributor");
             $table->text("deskripsi")->nullable();
-            $table->integer("status");
+            $table->tinyInteger("status")->default(1);
+            $table->string('user')->default("admin");
+            $table->tinyInteger('best_seller')->default(0);
             $table->timestamps();
         });
     }

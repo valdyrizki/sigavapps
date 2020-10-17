@@ -89,6 +89,11 @@ var salesChart = new Chart(salesChartCanvas, {
       <!-- Info boxes -->
       <div class="row">
         <div class="col-12 col-sm-6 col-md-3">
+            <button type="button" class="btn btn-danger" id="eod">Tutup Toko</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-sm-6 col-md-3">
           <div class="info-box">
             <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
 
@@ -149,7 +154,7 @@ var salesChart = new Chart(salesChartCanvas, {
       </div>
       <!-- /.row -->
 
-      <div class="row">
+      {{-- <div class="row">
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
@@ -283,12 +288,12 @@ var salesChart = new Chart(salesChartCanvas, {
         </div>
         <!-- /.col -->
       </div>
-      <!-- /.row -->
+      <!-- /.row --> --}}
 
       <!-- Main row -->
       <div class="row">
         <!-- Left col -->
-        <div class="col-md-8">
+        <div class="col-md-6">
           <!-- MAP & BOX PANE -->
 
 
@@ -345,7 +350,59 @@ var salesChart = new Chart(salesChartCanvas, {
         </div>
         <!-- /.col -->
 
-        <div class="col-md-4">
+        <!-- TABLE: HISTORY REFUND -->
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header border-transparent">
+                <h3 class="card-title">History Refund</h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table m-0">
+                    <thead>
+                    <tr>
+                        <th>Nama Produk</th>
+                        <th>Alasan</th>
+                        <th>Tanggal</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($refund as $rf)
+                            <tr>
+                                <td>{{$rf->nama_produk}}</td>
+                                <td>{{$rf->deskripsi_refund}}</td>
+                                <td>{{$rf->created_at}}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    </table>
+                </div>
+                <!-- /.table-responsive -->
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer clearfix">
+                <a href="/transaksi" class="btn btn-sm btn-info float-left">Transaksi Baru</a>
+                <a href="/laporan/penjualan" class="btn btn-sm btn-secondary float-right">Lihat Riwayat Transaksi</a>
+                </div>
+                <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
+            </div>
+            <!-- /.col -->
+      </div>
+
+        <div class="col-md-12">
           <!-- PRODUCT LIST -->
           <div class="card">
             <div class="card-header">
@@ -362,25 +419,30 @@ var salesChart = new Chart(salesChartCanvas, {
             </div>
             <!-- /.card-header -->
             <div class="card-body p-0">
-              <ul class="products-list product-list-in-card pl-2 pr-2">
-                  @foreach ($produk as $p)
-                    <li class="item">
-                        <div class="product-info">
-                        <a href="javascript:void(0)" class="product-title">{{$p->nama_produk}}
-                            @if ($p->stok<5)
-                                <span class="badge badge-danger float-right">{{$p->stok}}</span></a>
-                            @else
-                                <span class="badge badge-warning float-right">{{$p->stok}}</span></a>
-                            @endif
-
-                        <span class="product-description">
-                                {{$p->distributor}}
-                        </span>
-                        </div>
-                    </li>
-                  @endforeach
-                <!-- /.item -->
-              </ul>
+                <table id="tableStok" class="table table-bordered table-hover text-center" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Nama Produk</th>
+                            <th>Distributor</th>
+                            <th>Sisa Stok</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($produk as $p)
+                        <tr>
+                            <td>{{$p->nama_produk}}</td>
+                            <td>{{$p->distributor}}</td>
+                            <td>
+                                @if ($p->stok<5)
+                                    <span class="badge badge-danger float-center">{{$p->stok}}</span>
+                                @else
+                                    <span class="badge badge-warning float-center">{{$p->stok}}</span>
+                                @endif
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
             <!-- /.card-body -->
             <div class="card-footer text-center">
@@ -395,5 +457,76 @@ var salesChart = new Chart(salesChartCanvas, {
       <!-- /.row -->
     </div><!--/. container-fluid -->
   </section>
+
+  <script>
+      $(document).ready(function() {
+        let dttable = $('#tablePengeluaran').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "responsive": true,
+        });
+      });
+      $('#eod').on('click',function (){
+
+        Swal.fire({
+            title: 'Apakah kamu yakin?',
+            text: "transaksi setelah tutup toko akan masuk ke hari selanjutnya",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya proses EOD !'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/eod',
+                    data: {
+                    }, // or JSON.stringify ({name: 'jonas'}),
+                    success: function(data) {
+                        if(data.error){
+                            Swal.fire({
+                                title: 'Error!',
+                                text: data.message,
+                                icon: 'error',
+                                confirmButtonText: 'Close'
+                            });
+                        }else{
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: data.message,
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            location.reload();
+                        }
+
+
+                    },
+                    // contentType: "application/json",
+                    dataType: 'JSON'
+                });
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Cancel',
+                    text: 'Proses EOD dibatalkan !'
+                });
+            }
+        })
+
+        });
+  </script>
   <!-- /.content -->
 @endsection

@@ -41,9 +41,10 @@
                 <div class="col-sm-12">
                     <div class="card py-3 px-3">
                         <div class="col-sm-12">
-                                <table id="tablePengeluaran" class="table table-bordered table-hover text-center" style="width:100%">
+                            <table id="tablePengeluaran" class="table table-bordered table-hover text-center" style="width:100%">
                                 <thead>
                                     <tr>
+                                        <th>Tanggal</th>
                                         <th>Deskripsi Pengeluaran</th>
                                         <th>Jumlah Pengeluaran</th>
                                     </tr>
@@ -51,8 +52,9 @@
                                 <tbody>
                                     @foreach ($transaksi as $trx)
                                     <tr>
+                                        <td>{{$trx->created_at}}</td>
                                         <td>{{$trx->deskripsi_transaksi}}</td>
-                                        <td>{{$trx->total_harga}}</td>
+                                        <td>@currency($trx->total_harga*-1)</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -75,6 +77,7 @@ $(document).ready(function() {
         "info": true,
         "autoWidth": true,
         "responsive": true,
+        "order": [[ 0, "desc" ]]
     });
 
     $('#save').on( 'click', function () {
@@ -100,10 +103,11 @@ $(document).ready(function() {
 
                 dttable.row.add( [
                     deskripsi_pengeluaran,
-                    jumlah_pengeluaran*-1
+                    jumlah_pengeluaran
                 ] ).draw( false );
 
-                afterGenerate();
+                $('#deskripsi_pengeluaran').val("");
+                $('#jumlah_pengeluaran').val("");
              },
             // contentType: "application/json",
             dataType: 'JSON'

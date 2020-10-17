@@ -17,6 +17,7 @@ class CreateRefundsTable extends Migration
             $table->id();
             $table->integer('id_detailtransaksi');
             $table->text('deskripsi_refund');
+            $table->string('user')->default("admin");
             $table->timestamps();
         });
     }

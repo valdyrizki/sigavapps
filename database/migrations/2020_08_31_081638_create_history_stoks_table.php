@@ -15,9 +15,11 @@ class CreateHistoryStoksTable extends Migration
     {
         Schema::create('history_stok', function (Blueprint $table) {
             $table->id();
+            $table->integer('id_produk')->default(0);
             $table->integer('before');
             $table->integer('add_stok');
             $table->integer('after');
+            $table->string('user')->default("admin");
             $table->timestamps();
         });
     }

@@ -15,10 +15,12 @@ class CreateHistoryProduksTable extends Migration
     {
         Schema::create('history_produk', function (Blueprint $table) {
             $table->id();
+            $table->integer('id_produk');
             $table->integer('harga_modal_before');
             $table->integer('harga_jual_before');
             $table->integer('harga_modal_after');
             $table->integer('harga_jual_after');
+            $table->string('user')->default("admin");
             $table->timestamps();
         });
     }

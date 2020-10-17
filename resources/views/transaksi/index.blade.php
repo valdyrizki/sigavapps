@@ -152,12 +152,18 @@ $(document).ready(function() {
         let total = qty*harga;
 
         if(!idProduk){
-            alert("Pilih produk terlebih dahulu");
+            Swal.fire({
+                icon: 'error',
+                title: 'Pilih produk terlebih dahulu'
+            });
             return;
         }
 
         if (harga <= 0){
-            alert("Harga tidak boleh 0 atau minus");
+            Swal.fire({
+                icon: 'error',
+                title: 'Harga tidak boleh 0 atau minus'
+            });
             return;
         }
 
@@ -311,50 +317,72 @@ $(document).ready(function() {
     });
 
     $("#btnSaveData").on('click',function () {
-        if (!confirm('Apakah transaksi sudah benar ?')) return;
-        if (dttable.data().count() < 1 ) {
-            alert( 'Input Transaksi Terlebih Dahulu' );
-            return;
-        }
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
+        Swal.fire({
+            title: 'Apakah transaksi sudah benar ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, proses Transaksi !'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (dttable.data().count() < 1 ) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Input Transaksi Terlebih Dahulu'
+                        });
+                        return;
+                    }
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
 
-        $.ajax({
-            type: 'POST',
-            url: '/transaksi/insert',
-            data: {
-                "totalHarga" : total_belanja,
-                "detailTransaksi" : detailTransaksi
-            }, // or JSON.stringify ({name: 'jonas'}),
-            success: function(data) {
-                alert('data: ' + data.message);
-                $("#kategori_produk").val(0);
+                    $.ajax({
+                        type: 'POST',
+                        url: '/transaksi/insert',
+                        data: {
+                            "totalHarga" : total_belanja,
+                            "detailTransaksi" : detailTransaksi
+                        }, // or JSON.stringify ({name: 'jonas'}),
+                        success: function(data) {
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: data.message,
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            $("#kategori_produk").val(0);
 
-                $('#nama_produk').empty();
+                            $('#nama_produk').empty();
 
-                $('#harga_jual').val('');
-                $('#stok').val('');
-                $('#jumlah_beli').val(1);
+                            $('#harga_jual').val('');
+                            $('#stok').val('');
+                            $('#jumlah_beli').val(1);
 
-                dttable.clear().draw();
-                total_belanja = 0;
-                $("#total_belanja").text("");
-                detailTransaksi = [];
-                $('#moneyInput').val("").prop("disabled",true);
-                $('#kembalian').text("")
-                $('#m5000').prop("disabled",true);
-                $('#m10000').prop("disabled",true);
-                $('#m20000').prop("disabled",true);
-                $('#m50000').prop("disabled",true);
-                $('#m100000').prop("disabled",true);
-                afterGenerate();
-             },
-            // contentType: "application/json",
-            dataType: 'JSON'
-        });
+                            dttable.clear().draw();
+                            total_belanja = 0;
+                            $("#total_belanja").text("");
+                            detailTransaksi = [];
+                            $('#moneyInput').val("").prop("disabled",true);
+                            $('#kembalian').text("")
+                            $('#m5000').prop("disabled",true);
+                            $('#m10000').prop("disabled",true);
+                            $('#m20000').prop("disabled",true);
+                            $('#m50000').prop("disabled",true);
+                            $('#m100000').prop("disabled",true);
+                            afterGenerate();
+                        },
+                        // contentType: "application/json",
+                        dataType: 'JSON'
+                    });
+                }else{
+                    return;
+                }
+
+            });
 
     });
 

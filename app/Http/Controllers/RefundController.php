@@ -9,6 +9,7 @@ use App\Produk;
 use App\Refund;
 use App\Transaksi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RefundController extends Controller
 {
@@ -16,9 +17,19 @@ class RefundController extends Controller
     {
         $detail_transaksi = DetailTransaksi::find(request()->id_detailtransaksi);
 
-        //RETUR STOK
-        $produk = Produk::find($detail_transaksi->id_produk);
-        $produk->stok = $produk->stok+$detail_transaksi->jumlah;
+        //RETUR STOK (Hanya untuk transaksi, tidak untuk pengeluaran)
+        if($detail_transaksi->total_harga > 0){
+            $produk = Produk::find($detail_transaksi->id_produk);
+            $hist_stok = new HistoryStok;
+            $hist_stok->id_produk = $produk->id;
+            $hist_stok->before = $produk->stok;
+            $hist_stok->add_stok = $detail_transaksi->jumlah;
+            $hist_stok->after = $detail_transaksi->jumlah+$produk->stok;
+
+            $produk->stok = $produk->stok+$detail_transaksi->jumlah;
+            $produk->save();
+            $hist_stok->save();
+        }
 
         //Recovery Finance
         $finance = Finance::first();
@@ -38,6 +49,7 @@ class RefundController extends Controller
          $refund = new Refund();
          $refund->id_detailtransaksi = $detail_transaksi->id;
          $refund->deskripsi_refund = request()->deskripsi_refund;
+         $refund->user = Auth::user()->email;
 
          $detail_transaksi->status = 9;
 
@@ -45,7 +57,6 @@ class RefundController extends Controller
         $refund->save();
         $trx->save();
         $finance->save();
-        $produk->save();
         $detail_transaksi->save();
 
         return redirect('/laporan/penjualan');

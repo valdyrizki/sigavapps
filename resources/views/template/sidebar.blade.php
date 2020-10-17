@@ -15,7 +15,7 @@
           <img src="{{asset("assets/dist/img/user2-160x160.jpg")}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">VRIZKI Technology</a>
+        <a href="#" class="d-block">{{auth()->user()->name}}</a>
         </div>
       </div>
 
@@ -45,6 +45,12 @@
                 <a href="/transaksi" class="nav-link">
                   <i class="far fa-product nav-icon"></i>
                   <p>Penjualan</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/transaksiv2" class="nav-link">
+                  <i class="far fa-product nav-icon"></i>
+                  <p>Penjualan v2</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -83,6 +89,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                    <a href="/stokv2" class="nav-link">
+                      <i class="far fa-category nav-icon"></i>
+                      <p>Tambah Stok Barang v2</p>
+                    </a>
+                  </li>
+              <li class="nav-item">
                 <a href="/produk/edit" class="nav-link">
                   <i class="far fa-category nav-icon"></i>
                   <p>Edit Barang</p>
@@ -112,6 +124,14 @@
                 </a>
               </li>
             </ul>
+            <li class="nav-item">
+                <a href="/logout" class="nav-link">
+                    <i class="nav-icon fas fa-logout"></i>
+                    <p>
+                    Logout
+                    </p>
+                </a>
+            </li>
           </li>
         </ul>
       </nav>
