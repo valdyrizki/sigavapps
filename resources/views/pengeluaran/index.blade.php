@@ -99,15 +99,40 @@ $(document).ready(function() {
                 "jumlah_pengeluaran" : jumlah_pengeluaran
             }, // or JSON.stringify ({name: 'jonas'}),
             success: function(data) {
-                alert('data: ' + data.message);
+                if(data.status == 'error'){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal input pengeluaran transaksi'
+                    });
+                    return;
+                }else{
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
 
-                dttable.row.add( [
-                    deskripsi_pengeluaran,
-                    jumlah_pengeluaran
-                ] ).draw( false );
+                    var d = new Date,
+                        dformat = [
+                        d.getFullYear(),
+                        d.getMonth()+1,
+                        d.getDate()
+                        ].join('-')+' '+
+                        [d.getHours(),
+                        d.getMinutes(),
+                        d.getSeconds()].join(':');
 
-                $('#deskripsi_pengeluaran').val("");
-                $('#jumlah_pengeluaran').val("");
+                    dttable.row.add( [
+                        dformat,
+                        deskripsi_pengeluaran,
+                        jumlah_pengeluaran
+                    ] ).draw( false );
+
+                    $('#deskripsi_pengeluaran').val("");
+                    $('#jumlah_pengeluaran').val("");
+                }
              },
             // contentType: "application/json",
             dataType: 'JSON'

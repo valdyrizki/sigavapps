@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Finance;
 use App\Produk;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class HomeController extends Controller
+class HomeController extends MenuController
 {
     public function index()
     {
@@ -38,16 +39,22 @@ class HomeController extends Controller
         ");
 
         $profit = DB::select("
-        SELECT SUM(Z.profit) as profit
+        SELECT SUM(Z.profit) AS profit
         FROM
             (SELECT
-                (A.total_harga-(SELECT ((B.harga_modal*A.jumlah)) as profit from produk B
-                WHERE B.id = A.id_produk )) as profit
-        FROM detail_transaksi A
-        INNER JOIN transaksi C
-        ON A.id_transaksi = C.id
-        WHERE C.id_eod = 0
-        AND A.status = 1 ) Z
+                CASE WHEN A.id_produk = 130
+                    THEN (A.total_harga/10)
+                    ELSE (A.total_harga-(
+                        SELECT (B.harga_modal*A.jumlah)
+                        FROM produk B
+                        WHERE B.id = A.id_produk ))
+                END
+                AS profit
+            FROM detail_transaksi A
+            INNER JOIN transaksi C
+            ON A.id_transaksi = C.id
+            WHERE C.id_eod = 0
+            AND A.status = 1 ) Z
         ");
 
         $refund = DB::select("

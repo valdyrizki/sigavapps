@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Eod;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -43,5 +44,19 @@ class LaporanController extends Controller
         ORDER BY A.created_at");
 
         return view("laporan.penjualan",compact('report'));
+    }
+
+    public function eod()
+    {
+        $report = Eod::limit(5)->get();
+        return view("laporan.eod",compact('report'));
+    }
+
+    public function getEod(Request $req)
+    {
+        $tglAwal = substr($req->dtReport,0,10);
+        $tglAkhir = substr($req->dtReport,13);
+        $report = Eod::whereBetween('created_at', [$tglAwal,$tglAkhir.' 23:59:59'])->get();
+        return view("laporan.eod",compact('report'));
     }
 }

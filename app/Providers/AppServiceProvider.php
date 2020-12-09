@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Menu;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 

@@ -4,7 +4,7 @@
 @section('content')
 
 <!-- Main content -->
-<section class="content"
+<section class="content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
@@ -138,12 +138,6 @@
              $('.parent #refund').on( 'click', function () {
                 alert('SUKSES');
                 let deskripsi_refund = $("#deskripsi_refund").val();
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
 
                 $.ajax({
                     type: 'POST',

@@ -52,8 +52,53 @@
 {{-- Sweet Alert --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
+{{-- LOADING SPINNER --}}
+<style>
+    #overlay{
+	position: fixed;
+	top: 0;
+	z-index: 100;
+	width: 100%;
+	height:100%;
+	display: none;
+	background: rgba(0,0,0,0.6);
+}
+.cv-spinner {
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.spinner {
+	width: 40px;
+	height: 40px;
+	border: 4px #ddd solid;
+	border-top: 4px #2e93e6 solid;
+	border-radius: 50%;
+	animation: sp-anime 0.8s infinite linear;
+}
+@keyframes sp-anime {
+	100% {
+		transform: rotate(360deg);
+	}
+}
+.is-hide{
+	display:none;
+}
+</style>
+
 </head>
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+
+<div id="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>
+<script>
+    $("#overlay").fadeIn(300);
+</script>
+
 <div class="wrapper">
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -201,5 +246,26 @@
     </div>
   </footer>
 </div>
+
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    // LOADING SPINNER
+    $(document).ready(function(){
+        $("#overlay").hide();
+    });
+
+    $(document). ajaxStart( function() {
+        $("#overlay").fadeIn(300);
+    });
+    $(document). ajaxComplete( function() {
+        $("#overlay").hide();
+    });
+</script>
+
 </body>
 </html>

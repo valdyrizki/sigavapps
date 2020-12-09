@@ -27,16 +27,32 @@ class EodController extends Controller
         ");
 
         $profit = DB::select("
-        SELECT SUM(Z.profit) as profit
+        SELECT SUM(Z.profit) AS profit
         FROM
             (SELECT
-                (A.total_harga-(SELECT ((B.harga_modal*A.jumlah)) as profit from produk B
-                WHERE B.id = A.id_produk )) as profit
-        FROM detail_transaksi A
-        INNER JOIN transaksi C
-        ON A.id_transaksi = C.id
-        WHERE C.id_eod = 0
-        AND A.status = 1 ) Z
+                CASE WHEN A.id_produk = 130
+                    THEN (A.total_harga/10)
+                    ELSE (A.total_harga-(
+                        SELECT (B.harga_modal*A.jumlah)
+                        FROM produk B
+                        WHERE B.id = A.id_produk ))
+                END
+                AS profit
+            FROM detail_transaksi A
+            INNER JOIN transaksi C
+            ON A.id_transaksi = C.id
+            WHERE C.id_eod = 0
+            AND A.status = 1 ) Z
+        ");
+
+        $expense = DB::select("
+        SELECT COALESCE(sum(A.total_harga),0) as expense
+        FROM transaksi B
+        INNER JOIN detail_transaksi A
+        ON A.id_transaksi = B.id
+        WHERE B.id_eod = 0
+        AND A.status = 1
+        AND A.total_harga < 0
         ");
 
         $finance = Finance::select('balance')->first();
@@ -47,7 +63,8 @@ class EodController extends Controller
                     'omset' => $sellDay[0]->total_omset,
                     'profit' => $profit[0]->profit,
                     'sell' => $sellDay[0]->total_produk,
-                    'saldo_akhir' => $finance->balance
+                    'saldo_akhir' => $finance->balance,
+                    'expense' => $expense[0]->expense
                 ]);
                 Transaksi::where("id_eod",0)->update(['id_eod' => $eod->id]);
             }catch(Exception $e){

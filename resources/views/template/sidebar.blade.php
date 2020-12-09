@@ -24,114 +24,36 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-          <li class="nav-item">
-            <a href="/" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>
-                Dashboard
-              </p>
-            </a>
-          </li>
-          <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-dolly-flatbed"></i>
-              <p>
-                Transaksi
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="/transaksi" class="nav-link">
-                  <i class="far fa-product nav-icon"></i>
-                  <p>Penjualan</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="/transaksiv2" class="nav-link">
-                  <i class="far fa-product nav-icon"></i>
-                  <p>Penjualan v2</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="/pengeluaran" class="nav-link">
-                  <i class="far fa-category nav-icon"></i>
-                  <p>Pengeluaran</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-dolly-flatbed"></i>
-              <p>
-                Produk
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="/produk" class="nav-link">
-                  <i class="far fa-product nav-icon"></i>
-                  <p>List Produk</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="/produk/kategori" class="nav-link">
-                  <i class="far fa-category nav-icon"></i>
-                  <p>Kategori Produk</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="/stok" class="nav-link">
-                  <i class="far fa-category nav-icon"></i>
-                  <p>Tambah Stok Barang</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                    <a href="/stokv2" class="nav-link">
-                      <i class="far fa-category nav-icon"></i>
-                      <p>Tambah Stok Barang v2</p>
+
+            @foreach (generateMenu() as $m)
+                @if ($m['child'] != 0)
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                    <i class="nav-icon {{$m['icon']}}"></i>
+                      <p>{{$m['name']}}
+                        <i class="fas fa-angle-left right"></i>
+                      </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        @foreach ($m['child'] as $c)
+                        <li class="nav-item">
+                            <a href="{{$c->url}}" class="nav-link">
+                                <i class="far fa-product nav-icon"></i>
+                                <p>{{$c->name}}</p>
+                            </a>
+                        </li>
+                      @endforeach
+                    </ul>
                   </li>
-              <li class="nav-item">
-                <a href="/produk/edit" class="nav-link">
-                  <i class="far fa-category nav-icon"></i>
-                  <p>Edit Barang</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-book"></i>
-              <p>
-                Laporan
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="/laporan/penjualan" class="nav-link">
-                  <i class="far fa-credit-card nav-icon"></i>
-                  <p>Laporan Penjualan</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="/laporan/keuangan" class="nav-link">
-                  <i class="far fa-money-bill-alt nav-icon"></i>
-                  <p>Laporan Keuangan</p>
-                </a>
-              </li>
-            </ul>
-            <li class="nav-item">
-                <a href="/logout" class="nav-link">
-                    <i class="nav-icon fas fa-logout"></i>
-                    <p>
-                    Logout
-                    </p>
-                </a>
-            </li>
+                @else
+                    <li class="nav-item">
+                        <a href="{{$m['url']}}" class="nav-link">
+                        <i class="nav-icon {{$m['icon']}}"></i>
+                            <p>{{$m['name']}}</p>
+                        </a>
+                    </li>
+                @endif
+            @endforeach
           </li>
         </ul>
       </nav>

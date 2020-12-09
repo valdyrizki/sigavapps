@@ -327,7 +327,7 @@ var salesChart = new Chart(salesChartCanvas, {
                   <tbody>
                       @foreach ($lastTrx as $lt)
                         <tr>
-                            <td><span class="badge badge-success">{{$lt->id}}</span></td>
+                            <td><span class="badge {{$lt->total_harga>0?'badge-success':'badge-danger'}}">{{$lt->id}}</span></td>
                             <td>{{$lt->total_harga > 0 ? $lt->nama_produk : $lt->deskripsi_transaksi}}</td>
                             <td>{{$lt->jumlah}}</td>
                             <td>@currency($lt->total_harga)</td>
