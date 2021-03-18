@@ -3,102 +3,24 @@
 
 @section('content')
 
-<script>
-    $(function () {
 
-'use strict'
-
-/* ChartJS
- * -------
- * Here we will create a few charts using ChartJS
- */
-
-//-----------------------
-//- DAILY SALES CHART -
-//-----------------------
-
-// Get context with jQuery - using jQuery's .get() method.
-var salesChartCanvas = $('#salesChart').get(0).getContext('2d')
-
-var salesChartData = {
-  labels  : ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
-  datasets: [
-    {
-      label               : 'Digital Goods',
-      backgroundColor     : 'rgba(60,141,188,0.9)',
-      borderColor         : 'rgba(60,141,188,0.8)',
-      pointRadius          : false,
-      pointColor          : '#3b8bba',
-      pointStrokeColor    : 'rgba(60,141,188,1)',
-      pointHighlightFill  : '#fff',
-      pointHighlightStroke: 'rgba(60,141,188,1)',
-      data                : [300000, 400000, 200000, 800000, 600000, 1000000, 500000]
-    },
-    {
-      label               : 'Electronics',
-      backgroundColor     : 'rgba(210, 214, 222, 1)',
-      borderColor         : 'rgba(210, 214, 222, 1)',
-      pointRadius         : false,
-      pointColor          : 'rgba(210, 214, 222, 1)',
-      pointStrokeColor    : '#c1c7d1',
-      pointHighlightFill  : '#fff',
-      pointHighlightStroke: 'rgba(220,220,220,1)',
-      data                : [30000, 50000, 40000, 70000, 50000, 100000, 40]
-    },
-  ]
-}
-
-var salesChartOptions = {
-  maintainAspectRatio : false,
-  responsive : true,
-  legend: {
-    display: false
-  },
-  scales: {
-    xAxes: [{
-      gridLines : {
-        display : false,
-      }
-    }],
-    yAxes: [{
-      gridLines : {
-        display : false,
-      }
-    }]
-  }
-}
-
-// This will get the first returned node in the jQuery collection.
-var salesChart = new Chart(salesChartCanvas, {
-    type: 'line',
-    data: salesChartData,
-    options: salesChartOptions
-  }
-)
-
-//---------------------------
-//- END MONTHLY SALES CHART -
-//---------------------------
-
-})
-</script>
 
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
       <!-- Info boxes -->
-      <div class="row">
-        <div class="col-12 col-sm-6 col-md-3">
+      <div class="row pb-2">
+        <div class="col-12">
             <button type="button" class="btn btn-danger" id="eod">Tutup Toko</button>
         </div>
       </div>
       <div class="row">
         <div class="col-12 col-sm-6 col-md-3">
           <div class="info-box">
-            <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+            <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-money-bill-alt"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Omset Hari Ini</span>
+              <span class="info-box-text">Omset</span>
               <span class="info-box-number">
                 @currency($sellDay->total_omset)
               </span>
@@ -108,13 +30,79 @@ var salesChart = new Chart(salesChartCanvas, {
           <!-- /.info-box -->
         </div>
         <!-- /.col -->
+
         <div class="col-12 col-sm-6 col-md-3">
           <div class="info-box mb-3">
-            <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-up"></i></span>
+            <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-coins"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Perkiraan Keuntungan</span>
+              <span class="info-box-text">Admin TF</span>
+              <span class="info-box-number">@currency($admin_tf)</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+
+        <!-- fix for small devices only -->
+        <div class="clearfix hidden-md-up"></div>
+
+        
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box mb-3">
+            <span class="info-box-icon bg-success elevation-1"><i class="fas fa-hand-holding-usd"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Profit</span>
               <span class="info-box-number">@currency($profit)</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        
+        <!-- /.col -->
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box mb-3">
+            <span class="info-box-icon bg-success elevation-1"><i class="fas fa-cash-register"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Total Saldo</span>
+              <span class="info-box-number">@currency($finance->balance)</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+      </div>
+
+      <div class="row">
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box">
+            <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-exchange-alt"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Uang TF</span>
+              <div class="row">
+                <b class="pr-1 pt-1 pl-1">@currency($uang_tf) </b>
+                <span class="info-box-number mb-2" id='setoran_tf'>
+                </span>
+              </div>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box mb-3">
+            <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-minus"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Uang Minus</span>
+              <span class="info-box-number">@currency($uang_minus)</span>
             </div>
             <!-- /.info-box-content -->
           </div>
@@ -127,11 +115,11 @@ var salesChart = new Chart(salesChartCanvas, {
 
         <div class="col-12 col-sm-6 col-md-3">
           <div class="info-box mb-3">
-            <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
+            <span class="info-box-icon bg-success elevation-1"><i class="fas fa-plus"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Total Produk Terjual</span>
-              <span class="info-box-number">{{$sellDay->total_produk == 0 ? 0 : $sellDay->total_produk}}</span>
+              <span class="info-box-text">Uang Plus /Bulan</span>
+              <span class="info-box-number">@currency($uang_plus)</span>
             </div>
             <!-- /.info-box-content -->
           </div>
@@ -140,11 +128,11 @@ var salesChart = new Chart(salesChartCanvas, {
         <!-- /.col -->
         <div class="col-12 col-sm-6 col-md-3">
           <div class="info-box mb-3">
-            <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
+            <span class="info-box-icon bg-success elevation-1"><i class="fas fa-money-check-alt"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Total Saldo</span>
-              <span class="info-box-number">@currency($finance->balance)</span>
+              <span class="info-box-text">Total Asset</span>
+              <span class="info-box-number">@currency($total_asset)</span>
             </div>
             <!-- /.info-box-content -->
           </div>
@@ -328,7 +316,13 @@ var salesChart = new Chart(salesChartCanvas, {
                       @foreach ($lastTrx as $lt)
                         <tr>
                             <td><span class="badge {{$lt->total_harga>0?'badge-success':'badge-danger'}}">{{$lt->id}}</span></td>
-                            <td>{{$lt->total_harga > 0 ? $lt->nama_produk : $lt->deskripsi_transaksi}}</td>
+                            <td>
+                              @if ($lt->id_trx_category != 1)
+                                {{$lt->deskripsi_transaksi}}
+                              @else
+                                {{$lt->nama_produk}}
+                              @endif
+                            </td>
                             <td>{{$lt->jumlah}}</td>
                             <td>@currency($lt->total_harga)</td>
                             <td>{{$lt->created_at}}</td>
@@ -380,7 +374,7 @@ var salesChart = new Chart(salesChartCanvas, {
                     <tbody>
                         @foreach ($refund as $rf)
                             <tr>
-                                <td>{{$rf->nama_produk}}</td>
+                                <td>{{$rf->deskripsi_transaksi}}</td>
                                 <td>{{$rf->deskripsi_refund}}</td>
                                 <td>{{$rf->created_at}}</td>
                             </tr>
@@ -424,6 +418,7 @@ var salesChart = new Chart(salesChartCanvas, {
                         <tr>
                             <th>Nama Produk</th>
                             <th>Distributor</th>
+                            <th>Stok Wajar</th>
                             <th>Sisa Stok</th>
                         </tr>
                     </thead>
@@ -432,8 +427,9 @@ var salesChart = new Chart(salesChartCanvas, {
                         <tr>
                             <td>{{$p->nama_produk}}</td>
                             <td>{{$p->distributor}}</td>
+                            <td>{{$p->stok_wajar}}</td>
                             <td>
-                                @if ($p->stok<5)
+                                @if ($p->stok < ($p->stok_wajar/2))
                                     <span class="badge badge-danger float-center">{{$p->stok}}</span>
                                 @else
                                     <span class="badge badge-warning float-center">{{$p->stok}}</span>

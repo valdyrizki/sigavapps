@@ -22,24 +22,25 @@
             @csrf
       <!-- Info boxes -->
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                     <div class="card py-3 px-3">
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-md-12">
                                 <!-- select -->
                                 <div class="form-group">
                                 <label>Kategori Produk</label>
-                                <select class="form-control" name="kategori_produk" id="kategori_produk">
+                                <select class="form-control kategori_produk" name="kategori_produk" id="kategori_produk">
                                     <option value="0" selected>--- Custom Order ---</option>
                                     @foreach ($kategori as $k)
-                                        <option value="{{$k->id}}">{{$k->id}} - {{$k->nama_kategori}}</option>
+                                        <option value="{{$k->id}}">{{$k->id}} - {{$k->category_name}}</option>
                                     @endforeach
 
                                 </select>
                                 </div>
                             </div>
-
-                            <div class="col-sm-10">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-10 col-sm-12">
                                 <!-- select -->
                                 <div class="form-group">
                                 <label>Nama Produk</label>
@@ -47,7 +48,7 @@
                                 </select>
                                 </div>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-md-2 col-sm-12">
                                 <div class="form-group">
                                 <label>Qty</label>
                                 <input type="number" class="form-control" name="jumlah_beli" id="jumlah_beli" min="1" value="1">
@@ -56,14 +57,14 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
                                 <label>Harga Produk</label>
                                 <input type="number" class="form-control" name="harga_jual" id="harga_jual" >
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
+                            <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
                                 <label>Stok Produk</label>
                                 <input type="number" class="form-control" name="stok" id="stok" readonly>
@@ -71,7 +72,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-12">
                                 <div class="form-group">
                                 <label>Deskripsi Produk</label>
                                 <textarea class="form-control" name="deskripsi_produk" id="deskripsi_produk" readonly="readonly"></textarea>
@@ -80,7 +81,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-12">
                                 <div class="form-group">
                                     <button type="button" class="form-control btn btn-primary" id="inputProduk">Input</button>
                                 </div>
@@ -89,17 +90,17 @@
                     </div>
                 </div>
 
-                <div class="col-sm-6">
+                <div class="col-md-4 col-sm-12">
                     <div class="card py-3 px-3">
 
-                        <h2 class="col-sm-12" id="total_belanja"></h2>
-                        <input type="number" name="moneyInput" id="moneyInput" class="form-control col-sm-12" disabled>
+                        <h2 class="col-12" id="total_belanja"></h2>
+                        <input type="text" name="moneyInput" id="moneyInput" class="form-control col-sm-12" disabled>
                         <div class="row mt-1">
-                            <button type="button" class="btn btn-success col-sm-2 mr-3 btn-xs" id="m5000" disabled>@currency(5000)</button>
-                            <button type="button" class="btn btn-success col-sm-2 mr-3 btn-xs" id="m10000" disabled>@currency(10000)</button>
-                            <button type="button" class="btn btn-success col-sm-2 mr-3 btn-xs" id="m20000" disabled>@currency(20000)</button>
-                            <button type="button" class="btn btn-success col-sm-2 mr-3 btn-xs" id="m50000" disabled>@currency(50000)</button>
-                            <button type="button" class="btn btn-success col-sm-2 mr-3 btn-xs" id="m100000" disabled>@currency(100000)</button>
+                            <button type="button" class="btn btn-success col-sm-2 mr-2 btn-xs" id="m5000" disabled>@currency(5000)</button>
+                            <button type="button" class="btn btn-success col-sm-2 mr-2 btn-xs" id="m10000" disabled>@currency(10000)</button>
+                            <button type="button" class="btn btn-success col-sm-2 mr-2 btn-xs" id="m20000" disabled>@currency(20000)</button>
+                            <button type="button" class="btn btn-success col-sm-2 mr-2 btn-xs" id="m50000" disabled>@currency(50000)</button>
+                            <button type="button" class="btn btn-success col-sm-2 mr-2 btn-xs" id="m100000" disabled>@currency(100000)</button>
                         </div>
 
                         <h2 class="col-sm-12" id="kembalian"></h2>
@@ -170,8 +171,8 @@ $(document).ready(function() {
         dttable.row.add( [
             nmProduk,
             qty,
-            harga,
-            total
+            formatNumber(harga),
+            formatNumber(total)
         ] ).draw( false );
 
         //save to detailTransaksi
@@ -185,52 +186,20 @@ $(document).ready(function() {
         detailTransaksi.push(dtl);
 
         total_belanja += parseInt(total);
-        $("#total_belanja").html("Total : "+total_belanja);
-        $('#moneyInput').removeAttr("disabled").val(0);
+        $("#total_belanja").html("Total : "+formatNumber(total_belanja));
+        $('#moneyInput').removeAttr("disabled").val("");
         $('#m5000').removeAttr("disabled");
         $('#m10000').removeAttr("disabled");
         $('#m20000').removeAttr("disabled");
         $('#m50000').removeAttr("disabled");
         $('#m100000').removeAttr("disabled");
         afterGenerate();
+        $("#moneyInput").focus();
     } );
 
 
     $("#kategori_produk").change(function () {
-        let id_kategori = $('#kategori_produk').val();
-        $('#nama_produk').empty();
-        $('#nama_produk').append($('<option disabled selected>').text("--- Pilih Produk ---"));
-        if(id_kategori == 0){   //Jika custom order
-            $.getJSON("/produk/getAllProduk", function(json){
-                produk = json;
-                $.each(json, function(i, obj){
-                    $('#nama_produk').append($('<option>').text(obj.nama_produk).attr({
-                        value: obj.id,
-                        name: obj.nama_produk
-                    }));
-                });
-            });
-            $('#harga_jual').attr('readonly',false);
-            $('#jumlah_beli').val(1);
-            $('#harga_jual').val('');
-            $('#stok').val('');
-            $('#deskripsi_produk').val('');
-        }else{
-            $.getJSON("/produk/getProdukByKategori/"+id_kategori, function(json){
-                produk = json;
-                $.each(json, function(i, obj){
-                    $('#nama_produk').append($('<option>').text(obj.nama_produk).attr({
-                        value: obj.id,
-                        name: obj.nama_produk
-                    }));
-                });
-            });
-            $('#harga_jual').attr('readonly',true)
-            $('#jumlah_beli').val(1);
-            $('#harga_jual').val('');
-            $('#stok').val('');
-            $('#deskripsi_produk').val('');
-        }
+        getProduk();
     });
 
 
@@ -244,73 +213,83 @@ $(document).ready(function() {
                 $('#deskripsi_produk').val(produk[i].deskripsi);
             }
         }
+        $('#inputProduk').focus();
     });
 
     $('#moneyInput').keyup(function(){
-        var input = $(this).val();
+        let moneyInput = formatRupiah($("#moneyInput").val());
+        $("#moneyInput").val(moneyInput);
+
+        var input = $(this).val().replaceAll('.','');
         var hasil = total_belanja-input;
+
         if(hasil <= 0){
-            $('#kembalian').text('Kembalian : '+hasil*-1);
+            $('#kembalian').text('Kembalian : '+formatNumber(hasil*-1));
         }else{
             $('#kembalian').text("");
         }
     });
 
     $('#m5000').on('click',function (){
-        let moneyInput = $('#moneyInput').val();
-        $('#moneyInput').val(parseInt(moneyInput)+5000);
-        var input = $('#moneyInput').val();
+        let moneyInput = $('#moneyInput').val() != "" ? $('#moneyInput').val().replaceAll('.','') : 0;
+        let intInput = parseInt(moneyInput)+5000;
+        $('#moneyInput').val(formatRupiah(intInput));
+        var input = $('#moneyInput').val().replaceAll('.','');
         var hasil = total_belanja-input;
         if(hasil <= 0){
-            $('#kembalian').text('Kembalian : '+hasil*-1);
+            $('#kembalian').text('Kembalian : '+formatNumber(hasil*-1));
         }else{
             $('#kembalian').text("");
         }
     });
 
     $('#m10000').on('click',function (){
-        let moneyInput = $('#moneyInput').val();
-        $('#moneyInput').val(parseInt(moneyInput)+10000);
-        var input = $('#moneyInput').val();
+        let moneyInput = $('#moneyInput').val() != "" ? $('#moneyInput').val().replaceAll('.','') : 0;
+        let intInput = parseInt(moneyInput)+10000;
+        $('#moneyInput').val(formatRupiah(intInput));
+        var input = $('#moneyInput').val().replaceAll('.','');
         var hasil = total_belanja-input;
         if(hasil <= 0){
-            $('#kembalian').text('Kembalian : '+hasil*-1);
+            $('#kembalian').text('Kembalian : '+formatNumber(hasil*-1));
         }else{
             $('#kembalian').text("");
         }
     });
 
     $('#m20000').on('click',function (){
-        let moneyInput = $('#moneyInput').val();
-        $('#moneyInput').val(parseInt(moneyInput)+20000);
-        var input = $('#moneyInput').val();
+        let moneyInput = $('#moneyInput').val() != "" ? $('#moneyInput').val().replaceAll('.','') : 0;
+        let intInput = parseInt(moneyInput)+20000;
+        $('#moneyInput').val(formatRupiah(intInput));
+        var input = $('#moneyInput').val().replaceAll('.','');
         var hasil = total_belanja-input;
         if(hasil <= 0){
-            $('#kembalian').text('Kembalian : '+hasil*-1);
+            $('#kembalian').text('Kembalian : '+formatNumber(hasil*-1));
         }else{
             $('#kembalian').text("");
         }
     });
 
     $('#m50000').on('click',function (){
-        let moneyInput = $('#moneyInput').val();
-        $('#moneyInput').val(parseInt(moneyInput)+50000);
-        var input = $('#moneyInput').val();
+        let moneyInput = $('#moneyInput').val() != "" ? $('#moneyInput').val().replaceAll('.','') : 0;
+        let intInput = parseInt(moneyInput)+50000;
+        $('#moneyInput').val(formatRupiah(intInput));
+        var input = $('#moneyInput').val().replaceAll('.','');
         var hasil = total_belanja-input;
         if(hasil <= 0){
-            $('#kembalian').text('Kembalian : '+hasil*-1);
+            $('#kembalian').text('Kembalian : '+formatNumber(hasil*-1));
         }else{
             $('#kembalian').text("");
         }
     });
 
     $('#m100000').on('click',function (){
-        let moneyInput = $('#moneyInput').val();
-        $('#moneyInput').val(parseInt(moneyInput)+100000);
-        var input = $('#moneyInput').val();
+        let moneyInput = $('#moneyInput').val() != "" ? $('#moneyInput').val().replaceAll('.','') : 0;
+        let intInput = parseInt(moneyInput)+100000;
+        $('#moneyInput').val(formatRupiah(intInput));
+        var input = $('#moneyInput').val().replaceAll('.','');
         var hasil = total_belanja-input;
         if(hasil <= 0){
-            $('#kembalian').text('Kembalian : '+hasil*-1);
+            $('#kembalian').text('Kembalian : '+formatNumber(hasil*-1));
         }else{
             $('#kembalian').text("");
         }
@@ -395,7 +374,7 @@ $(document).ready(function() {
         $('#stok').val('');
         $('#jumlah_beli').val(1);
         $('#nama_produk').append($('<option disabled selected>').text("--- Pilih Produk ---"));
-        $.getJSON("/produk/getAllProduk", function(json){
+        $.getJSON("/produk/get", function(json){
                 produk = json;
                 $.each(json, function(i, obj){
                     $('#nama_produk').append($('<option>').text(obj.nama_produk).attr({
@@ -420,7 +399,46 @@ $(document).ready(function() {
         afterGenerate();
     }
 
+    async function getProduk(){
+        let id_kategori = $('#kategori_produk').val();
+        $('#nama_produk').empty();
+        $('#nama_produk').append($('<option disabled selected>').text("--- Pilih Produk ---"));
+        if(id_kategori == 0){   //Jika custom order
+            await $.getJSON("/produk/get", function(json){
+                produk = json;
+                $.each(json, function(i, obj){
+                    $('#nama_produk').append($('<option>').text(obj.nama_produk).attr({
+                        value: obj.id,
+                        name: obj.nama_produk
+                    }));
+                });
+            });
+            $('#harga_jual').attr('readonly',false);
+            $('#jumlah_beli').val(1);
+            $('#harga_jual').val('');
+            $('#stok').val('');
+            $('#deskripsi_produk').val('');
+        }else{
+            await $.getJSON("/produk/getByKategori/"+id_kategori, function(json){
+                produk = json;
+                $.each(json, function(i, obj){
+                    $('#nama_produk').append($('<option>').text(obj.nama_produk).attr({
+                        value: obj.id,
+                        name: obj.nama_produk
+                    }));
+                });
+            });
+            $('#harga_jual').attr('readonly',true)
+            $('#jumlah_beli').val(1);
+            $('#harga_jual').val('');
+            $('#stok').val('');
+            $('#deskripsi_produk').val('');
+        }
+        $("#nama_produk").select2('open');
+    }
+
     afterGenerate();
+    
 } );
     </script>
 

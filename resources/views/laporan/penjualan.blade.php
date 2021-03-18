@@ -56,12 +56,14 @@
                                 <tr>
                                     <td>{{$no}}</td>
                                     <td>
-                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-sm" onclick="showModal({{$rpt->id}})">
-                                        Refund
-                                    </button>
+                                    @if ($rpt->id_eod == 0)
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-sm" onclick="showModal({{$rpt->id}})">
+                                            Refund
+                                        </button>
+                                    @endif
                                     </td>
                                     <td>{{$rpt->created_at}}</td>
-                                    <td>{{$rpt->total_harga > 0 ? $rpt->nama_produk : $rpt->deskripsi_transaksi}}</td>
+                                    <td>{{$rpt->id_trx_category != 1 ? $rpt->deskripsi_transaksi : $rpt->nama_produk}}</td>
                                     <td>{{$rpt->jumlah}}</td>
 
                                 <td class="{{$rpt->total_harga > 0 ? 'bg-success' : 'bg-danger'}}">@currency($rpt->total_harga)</td>
@@ -86,31 +88,7 @@
                 </div>
             </div>
     </div>
-    <div class="modal fade" id="modal-sm">
-        <div class="modal-dialog modal-sm">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Refund Transaksi</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <form action="/refund" method="POST">
-                @csrf
-                <input type="hidden" name="id_detailtransaksi" id="id_detailtransaksi">
-                <div class="modal-body">
-                    <textarea name="deskripsi_refund" id="deskripsi_refund" class="form-control" placeholder="Deskripsi Refund" required></textarea>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Refund Transaksi</button>
-                </div>
-            </form>
-          </div>
-          <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
+    @include('laporan.modal_refund')
 
 
     <script>

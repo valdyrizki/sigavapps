@@ -20,6 +20,7 @@ class CreateHistoryStoksTable extends Migration
             $table->integer('add_stok');
             $table->integer('after');
             $table->string('user')->default("admin");
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

@@ -330,7 +330,7 @@ $(document).ready(function() {
             });
             $('#harga_jual').attr('readonly',false);
         }else{
-            $.getJSON("/produk/getProdukByKategori/"+id_kategori, function(json){
+            $.getJSON("/produk/getByKategori/"+id_kategori, function(json){
                 produk = json;
                 $.each(json, function(i, obj){
                     $("#rowProduct").append("<div class='card col-sm-3'><div class='card-body'><h6 class='card-title text-center'>"+obj.nama_produk+"</h6>    <p class='card-text'>        <small class='text-muted'>                "+obj.deskripsi+"        </small>    </p>    <div class='input-group input-group-sm'>        <div class='input-group-prepend'>            <span class='input-group-text' id='inputGroup-sizing-sm'>Qty</span>        </div>        <input type='number' class='form-control' id='' value='1' aria-label='Small' aria-describedby='inputGroup-sizing-sm'>    </div>    <div class='input-group input-group-sm'>        <div class='input-group-prepend'>            <span class='input-group-text' id='inputGroup-sizing-sm'>Price</span>        </div>        <input type='number' class='form-control' id='harga_jual' name='harga_jual' value='"+obj.harga_jual+"' aria-label='Small' aria-describedby='inputGroup-sizing-sm'>    </div>    <button type='button' class='btn-sm btn-primary text-center col-sm-12 mt-1'>Add</button></div></div>")

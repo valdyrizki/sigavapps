@@ -85,10 +85,53 @@
 .is-hide{
 	display:none;
 }
+
+.select2-selection__rendered {
+  line-height: 30px !important;
+}
+.select2-container .select2-selection--single {
+  height: 38px !important;
+}
+.select2-selection__arrow {
+  height: 38px !important;
+}
+.main-sidebar { 
+  background-color: #2962FF !important ;
+}
+.main-header{
+  background-color: #2962FF !important ;
+}
+.brand-link{
+  background-color: #2962FF !important 
+}
+.main-footer{
+  background-color: #2962FF !important;
+  color: #FFF !important;
+}
+.brand-text{
+  color: #FFF !important 
+}
+.user-panel{
+  color: #FFF !important 
+}
+a {
+    color:inherit;
+    text-decoration: none;
+  }
+.nav-link{
+  color: #FFF !important 
+}
+.wrapper{
+  background-color: #FAFAFA !important;
+}
+.body{
+  background-color: #FAFAFA !important;
+}
+
 </style>
 
 </head>
-<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+<body class="">
 
 <div id="overlay">
     <div class="cv-spinner">
@@ -101,7 +144,7 @@
 
 <div class="wrapper">
   <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+  <nav class="main-header navbar navbar-expand navbar-dark">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
       <li class="nav-item">
@@ -265,6 +308,30 @@
     $(document). ajaxComplete( function() {
         $("#overlay").hide();
     });
+
+    function formatNumber(num) {
+      let numToString = num.toString();
+      return(numToString.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')) 
+    } 
+
+    /* Fungsi formatRupiah */
+		function formatRupiah(angka){
+      let angkaToString = angka.toString();
+			var number_string = angkaToString.replace(/[^,\d]/g, ''),
+			split   		= number_string.split(','),
+			sisa     		= split[0].length % 3,
+			rupiah     		= split[0].substr(0, sisa),
+			ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
+ 
+			// tambahkan titik jika yang di input sudah menjadi angka ribuan
+			if(ribuan){
+				separator = sisa ? '.' : '';
+				rupiah += separator + ribuan.join('.');
+			}
+ 
+			rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+			return rupiah;
+		}
 </script>
 
 </body>

@@ -20,6 +20,7 @@ class CreateMenusTable extends Migration
             $table->tinyInteger("status");
             $table->string("url");
             $table->string("icon")->nullable();
+            $table->smallInteger("seq")->default(1);
             $table->timestamps();
         });
     }

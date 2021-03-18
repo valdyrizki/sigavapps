@@ -1,5 +1,5 @@
 @extends('template.master')
-@section('title', 'Laporan Penjualan')
+@section('title', 'Laporan EOD')
 
 @section('content')
 
@@ -44,6 +44,8 @@
                                     <th>Pengeluaran</th>
                                     <th>Profit</th>
                                     <th>Saldo Akhir</th>
+                                    <th>Setoran TF</th>
+                                    <th>Admin TF</th>
                                     <th>Tanggal</th>
                                 </tr>
                             </thead>
@@ -55,6 +57,8 @@
                                     <td>@currency($rpt->expense)</td>
                                     <td>@currency($rpt->profit)</td>
                                     <td>@currency($rpt->saldo_akhir)</td>
+                                    <td>@currency($rpt->total_tf)</td>
+                                    <td>@currency($rpt->admin_tf)</td>
                                     <td>{{$rpt->created_at}}</td>
                                </tr>
                                 @endforeach

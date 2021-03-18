@@ -3,18 +3,6 @@
 
 @section('content')
 
-<style>
-    .select2-selection__rendered {
-    line-height: 30px !important;
-}
-    .select2-container .select2-selection--single {
-        height: 38px !important;
-    }
-    .select2-selection__arrow {
-        height: 38px !important;
-    }
-</style>
-
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">

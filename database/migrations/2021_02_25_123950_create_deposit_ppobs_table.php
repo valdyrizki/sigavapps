@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddExpenseToEodTable extends Migration
+class CreateDepositPpobsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,12 @@ class AddExpenseToEodTable extends Migration
      */
     public function up()
     {
-        Schema::table('eod', function (Blueprint $table) {
-            $table->integer('expense')->nullable();
+        Schema::create('deposit_ppobs', function (Blueprint $table) {
+            $table->id();
+            $table->string('bank');
+            $table->integer('topup');
+            $table->tinyInteger('status')->default(0);
+            $table->timestamps();
         });
     }
 
@@ -25,8 +29,6 @@ class AddExpenseToEodTable extends Migration
      */
     public function down()
     {
-        Schema::table('eod', function (Blueprint $table) {
-            $table->dropColumn('expense');
-        });
+        Schema::dropIfExists('deposit_ppobs');
     }
 }

@@ -26,6 +26,8 @@ class CreateProduksTable extends Migration
             $table->tinyInteger("status")->default(1);
             $table->string('user')->default("admin");
             $table->tinyInteger('best_seller')->default(0);
+            $table->tinyInteger('warning_stok')->default(0);
+            $table->tinyInteger('stok_wajar')->default(1);
             $table->timestamps();
         });
     }

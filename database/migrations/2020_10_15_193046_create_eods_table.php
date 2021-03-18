@@ -19,6 +19,9 @@ class CreateEodsTable extends Migration
             $table->integer('profit');
             $table->integer('sell');
             $table->integer('saldo_akhir');
+            $table->integer('expense')->default(0);
+            $table->integer('total_tf')->default(0);
+            $table->integer('admin_tf')->default(0);
             $table->timestamps();
         });
     }

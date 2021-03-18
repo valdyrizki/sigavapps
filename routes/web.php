@@ -14,14 +14,95 @@ Route::middleware('auth')->group(function(){
         // PENGELUARAN
         Route::get('/pengeluaran',"PengeluaranController@index");
         Route::post('/pengeluaran/insert',"PengeluaranController@insert");
-        Route::get('/produk/getAllProduk',"ProdukController@getAllProduk");
+        Route::get('/pengeluaran/getAll',"PengeluaranController@getAll");
+        Route::get('/pengeluaran/getByDate',"PengeluaranController@getByDate");
+
+        // PEMASUKAN
+        Route::get('/pemasukan',"PemasukanController@index");
+        Route::post('/pemasukan/insert',"PemasukanController@insert");
+        Route::get('/pemasukan/getAll',"PemasukanController@getAll");
+        Route::get('/pemasukan/getByDate',"PemasukanController@getByDate");
+
+        // MEMBER
+        Route::get('/member',"MemberController@index");
+        Route::post('/member/insert',"MemberController@store");
+        Route::put('/member/update',"MemberController@update");
+        Route::get('/member/getAll',"MemberController@getAll");
+        Route::get('/member/getByDate',"MemberController@getByDate");
+        Route::put('/member/getById',"MemberController@getById");
+        Route::delete('/member/delete',"MemberController@delete");
+
+        // PRODUCT CATEGORY
+        Route::get('/product-category',"ProductCategoryController@index");
+        Route::post('/product-category/insert',"ProductCategoryController@store");
+        Route::put('/product-category/update',"ProductCategoryController@update");
+        Route::get('/product-category/getAll',"ProductCategoryController@getAll");
+        Route::get('/product-category/getByDate',"ProductCategoryController@getByDate");
+        Route::put('/product-category/getById',"ProductCategoryController@getById");
+        Route::delete('/product-category/delete',"ProductCategoryController@delete");
+
+        // TRX CATEGORY
+        Route::get('/trx-category',"TrxCategoryController@index");
+        Route::post('/trx-category/insert',"TrxCategoryController@store");
+        Route::put('/trx-category/update',"TrxCategoryController@update");
+        Route::get('/trx-category/getAll',"TrxCategoryController@getAll");
+        Route::get('/trx-category/getByDate',"TrxCategoryController@getByDate");
+        Route::put('/trx-category/getById',"TrxCategoryController@getById");
+        Route::delete('/trx-category/delete',"TrxCategoryController@delete");
+
+        // History Refund
+        Route::get('/history-refund',"RefundController@index");
+        Route::get('/history-refund/getAll',"RefundController@getAll");
+        
+        // History Produk
+        Route::get('/history-produk',"ProdukController@historyProduk");
+        Route::get('/history-produk/getAllHistory',"ProdukController@getAllHistory");
+
+        // Jasa Transfer
+        Route::get('/jasatf',"JasaTFController@index");
+        Route::post('/jasatf/insert',"JasaTFController@store");
+        Route::put('/jasatf/update',"JasaTFController@update");
+        Route::get('/jasatf/getAll',"JasaTFController@getAll");
+        Route::get('/jasatf/getSetoranTF',"JasaTFController@getSetoranTF");
+        Route::get('/jasatf/getProfitTF',"JasaTFController@getProfitTF");
+        Route::get('/jasatf/getAdminTF',"JasaTFController@getAdminTF");
+        Route::put('/jasatf/getById',"JasaTFController@getById");
+        Route::delete('/jasatf/delete',"JasaTFController@delete");
+
+        // PPOB
+        Route::get('/ppob',"PPOBController@index");
+        Route::put('/ppob/getOperator',"PPOBController@getOperator");
+        Route::put('/ppob/getProduct',"PPOBController@getProduct");
+        Route::post('/ppob/send',"PPOBController@send");
+        Route::get('/ppob/update-product/{operator_id}',"PPOBController@send");
+
+        // Rekening
+        Route::get('/rekening',"RekeningController@index");
+        Route::post('/rekening/insert',"RekeningController@store");
+        Route::put('/rekening/update',"RekeningController@update");
+        Route::get('/rekening/getAll',"RekeningController@getAll");
+        Route::put('/rekening/getByNorek',"RekeningController@getByNorek");
+        Route::get('/rekening/getByDate',"RekeningController@getByDate");
+        Route::put('/rekening/getById',"RekeningController@getById");
+        Route::delete('/rekening/delete',"RekeningController@delete");
 
         // PRODUK
+        Route::get('/produk/getAll',"ProdukController@getAll");
+        Route::get('/produk/get',"ProdukController@get");
         Route::get('/produk',"ProdukController@index");
-        Route::get('/produk/getProdukByKategori/{id_kategori}',"ProdukController@getProdukByKategori");
+        Route::get('/produk/getByKategori/{id_kategori}',"ProdukController@getByKategori");
         Route::get('/produk/getProdukByInput/{input}',"ProdukController@getProdukByInput");
         Route::get('/produk/getProdukByCategoryInput/{id_kategori}/{input}',"ProdukController@getProdukByCategoryInput");
         Route::get('/produk/getproductbycode/{code}',"ProdukController@getProductByCode");
+        Route::put('/produk/getById',"ProdukController@getById");
+        Route::put('/produk/getStockById',"ProdukController@getStockById");
+        Route::get('/produk/getHistoryStokIn',"ProdukController@getHistoryStokIn");
+        Route::get('/produk/getHistoryStokOut',"ProdukController@getHistoryStokOut");
+        Route::get('/produk/getHistoryStokInByDate',"ProdukController@getHistoryStokInByDate");
+        Route::get('/produk/getHistoryStokOutByDate',"ProdukController@getHistoryStokOutByDate");
+        
+        // KATEGORI
+        Route::get('/kategori/get',"KategoriController@get");
 
         //MENU
         Route::get('/menu/menuhaschild/{id}', 'MenuController@menuHasChild');
@@ -39,26 +120,29 @@ Route::middleware('auth')->group(function(){
         Route::post('/transaksi/insertv2',"TransaksiController@insertv2");
     });
 
-    Route::middleware(['middleware' => checkAdmin::class])->group(function(){   //ADMIN
+    Route::middleware(['middleware' => checkAdmin::class])->group(function(){   //ADMIN / SPV
+        
+        // TRANSAKSI
+        Route::get('/transaksi',"TransaksiController@index");
+        Route::post('/transaksi/insert',"TransaksiController@insert");
+
         //PRODUK
         Route::post('/produk/insert',"ProdukController@insert");
-        Route::get('/produk/edit',"ProdukController@editProduk");
-        Route::POST('/produk/update',"ProdukController@updateProduk");
+        Route::put('/produk/update',"ProdukController@update");
+        Route::delete('/produk/delete',"ProdukController@delete");
+        Route::get('/stock-in',"ProdukController@stockIn");
+        Route::post('/stock-in/insert',"ProdukController@addStock");
 
-        //STOK
-        Route::get('/stok',"ProdukController@stok");
-        Route::post('/addStok',"ProdukController@addStok");
-
-        //STOK V2
-        Route::get('/stokv2',"ProdukController@stokv2");
-        Route::post('/addStokv2',"ProdukController@addStokv2");
+        //STOCK Out
+        Route::get('/stock-out',"ProdukController@stockOut");
+        Route::post('/stock-out/insert',"ProdukController@outStock");
 
         // KATEGORI PRODUK
         Route::get('/produk/kategori',"ProdukController@kategori");
         Route::post('/produk/insertkategori',"ProdukController@insertKategori");
 
         //REFUND
-        Route::POST('/refund',"RefundController@refund");
+        Route::POST('/refund/insert',"RefundController@store");
 
         //EOD
         Route::POST('/eod',"EodController@eod");

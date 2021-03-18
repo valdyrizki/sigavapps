@@ -13,16 +13,21 @@ class LaporanController extends Controller
     {
         $today = Carbon::today()->format('Y-m-d');
 
-        $report = DB::select("SELECT A.id,
+        $report = DB::select(
+        "SELECT A.id,
         (SELECT B.nama_produk from produk B WHERE B.id = A.id_produk) as nama_produk,
         A.jumlah,
         A.total_harga,
         A.created_at,
-        A.deskripsi_transaksi
-        FROM detail_transaksi A
-        WHERE DATE(A.created_at) = '".$today."'
+        A.deskripsi_transaksi,
+        A.id_trx_category,
+        C.id_eod
+        FROM detail_transaksi A, transaksi C
+        WHERE A.id_transaksi = C.id
+        AND DATE(A.created_at) = '".$today."'
         AND A.status = 1
-        ORDER BY A.created_at");
+        ORDER BY A.created_at
+        ");
 
         return view("laporan.penjualan",compact('report'));
     }
@@ -37,9 +42,12 @@ class LaporanController extends Controller
         A.jumlah,
         A.total_harga,
         A.created_at,
-        A.deskripsi_transaksi
-        FROM detail_transaksi A
-        WHERE DATE(A.created_at) BETWEEN '".$tglAwal."' AND '".$tglAkhir."'
+        A.deskripsi_transaksi,
+        A.id_trx_category,
+        C.id_eod
+        FROM detail_transaksi A, transaksi C
+        WHERE A.id_transaksi = C.id
+        AND DATE(A.created_at) BETWEEN '".$tglAwal."' AND '".$tglAkhir."'
         AND A.status = 1
         ORDER BY A.created_at");
 
@@ -48,7 +56,7 @@ class LaporanController extends Controller
 
     public function eod()
     {
-        $report = Eod::limit(5)->get();
+        $report = Eod::limit(5)->orderBy("id","desc")->get();
         return view("laporan.eod",compact('report'));
     }
 

@@ -4,73 +4,68 @@ namespace App\Http\Controllers;
 
 use App\Eod;
 use App\Finance;
+use App\JasaTF;
 use App\Transaksi;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class EodController extends Controller
 {
     public function eod()
     {
 
-        $sellDay = DB::select("
-        SELECT sum(A.total_harga) as total_omset,
-        sum(A.jumlah) as total_produk,
-        count(A.id) as totalTrx
-        FROM transaksi B
-        INNER JOIN detail_transaksi A
-        ON A.id_transaksi = B.id
-        WHERE B.id_eod = 0
-        AND A.status = 1
-        AND A.total_harga > 0
-        ");
-
-        $profit = DB::select("
-        SELECT SUM(Z.profit) AS profit
-        FROM
-            (SELECT
-                CASE WHEN A.id_produk = 130
-                    THEN (A.total_harga/10)
-                    ELSE (A.total_harga-(
-                        SELECT (B.harga_modal*A.jumlah)
-                        FROM produk B
-                        WHERE B.id = A.id_produk ))
-                END
-                AS profit
-            FROM detail_transaksi A
-            INNER JOIN transaksi C
-            ON A.id_transaksi = C.id
-            WHERE C.id_eod = 0
-            AND A.status = 1 ) Z
-        ");
-
-        $expense = DB::select("
-        SELECT COALESCE(sum(A.total_harga),0) as expense
-        FROM transaksi B
-        INNER JOIN detail_transaksi A
-        ON A.id_transaksi = B.id
-        WHERE B.id_eod = 0
-        AND A.status = 1
-        AND A.total_harga < 0
-        ");
+        $sellDay = App::call('App\Http\Controllers\HomeController@getSellsDay');
+        $profit = App::call('App\Http\Controllers\HomeController@getAllProfit');
+        $expense = App::call('App\Http\Controllers\HomeController@getAllExpense');
 
         $finance = Finance::select('balance')->first();
         $msg = 'Proses EOD Berhasil';
         if($sellDay[0]->total_produk != null && $sellDay[0]->total_omset != null){
+            DB::beginTransaction();
             try{
+                $uangTF = JasaTF::whereStatus(1)->sum("jumlah");
+                //CREATE EOD
                 $eod = Eod::create([
                     'omset' => $sellDay[0]->total_omset,
-                    'profit' => $profit[0]->profit,
+                    'profit' => $profit,
                     'sell' => $sellDay[0]->total_produk,
                     'saldo_akhir' => $finance->balance,
-                    'expense' => $expense[0]->expense
+                    'expense' => $expense[0]->expense,
+                    'total_tf' => $uangTF,
+                    'admin_tf' => App::call('App\Http\Controllers\JasaTFController@getAdminTF')
                 ]);
+
+                $request = Http::get('https://api.telegram.org/bot1641094965:AAG0kjhFWdBWXnygWwantTOtvjNEtvANiFU/sendMessage',
+                [
+                    'chat_id'=>'-1001368719479',
+                    'parse_mode' => 'HTML',
+                    'text' => 'Toko telah tutup, berikut rincian penghasilannya : 
+                    Omset : '.formatRupiah($sellDay[0]->total_omset).'
+                    Profit : '.formatRupiah($profit).'
+                    Uang TF : '.formatRupiah($uangTF).'
+                    Admin TF : '.formatRupiah(App::call('App\Http\Controllers\JasaTFController@getAdminTF'))
+                ]);
+                $response = $request->getBody();
+
+                // UPDATE TRX
                 Transaksi::where("id_eod",0)->update(['id_eod' => $eod->id]);
+
+                //UPDATE JASA TRANSFER
+                JasaTF::where("status",1)->update(['status' => 2]);
+
+                App::call('App\Http\Controllers\ProdukController@updateStokWajar');
+
+                DB::commit();
             }catch(Exception $e){
+                DB::rollback();
                 return response()->json([
                     'message' => "Ada kesalahan transaksi, Proses EOD Gagal",
-                    'error' => true
+                    'msg' => $e,
+                    'error' => true,
+                    'res' => $response
                 ]);
             }
         }else{

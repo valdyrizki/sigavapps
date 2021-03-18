@@ -19,6 +19,7 @@ class CreateFinancesTable extends Migration
             $table->integer('income')->default(0);
             $table->integer('expense')->default(0);
             $table->integer('balance')->default(0);
+            $table->integer('ppob')->default(0);
             $table->timestamps();
         });
     }
