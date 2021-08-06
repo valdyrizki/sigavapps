@@ -16,12 +16,13 @@ class JasaTFResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'created_at' => Carbon::parse($this->created_at)->diffForHumans(),
+            'created_at' => $this->created_at,
             'id' => $this->id,
             'norek' => $this->norek." (".$this->bank.")",
             'an' => $this->an,
             'jumlah' => formatRupiah($this->jumlah),
-            'biaya' => formatRupiah($this->biaya)
+            'biaya' => formatRupiah($this->biaya),
+            'status' => getStsTF($this->status)
         ];
     }
 }

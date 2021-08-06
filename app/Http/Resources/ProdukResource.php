@@ -20,6 +20,7 @@ class ProdukResource extends JsonResource
             'nama_produk' => $this->nama_produk,
             'kategori' => $this->category_name,
             'stok' => $this->stok,
+            'stok_wajar' => $this->stok_wajar,
             'harga_modal' => "Rp ".formatRupiah($this->harga_modal),
             'harga_jual' => "Rp ".formatRupiah($this->harga_jual),
             'distributor' => $this->distributor,

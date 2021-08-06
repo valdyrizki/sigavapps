@@ -23,10 +23,9 @@ class JasaTFController extends Controller
 
     public function getAll()
     {
-        $jasatf = DB::select('  SELECT A.created_at,A.id,A.norek,A.an,A.jumlah,C.biaya,A.bank 
+        $jasatf = DB::select('  SELECT A.created_at,A.id,A.norek,A.an,A.jumlah,C.biaya,A.bank , A.status
                                 FROM jasa_tf A
                                 INNER JOIN biaya_admins C ON A.id_biaya_admin = C.id
-                                WHERE A.status = 1
                                  ', []);
 
         return JasaTFResource::collection($jasatf);

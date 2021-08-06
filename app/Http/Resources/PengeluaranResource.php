@@ -17,7 +17,7 @@ class PengeluaranResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'created_at' => Carbon::parse($this->created_at)->diffForHumans(),
+            'created_at' => $this->created_at->format('d-m-Y - H:i:s'),
             'deskripsi_transaksi' => $this->deskripsi_transaksi,
             'nama' => $this->category_name,
             'total_harga' => "Rp ".formatRupiah($this->total_harga)

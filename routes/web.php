@@ -23,7 +23,22 @@ Route::middleware('auth')->group(function(){
         Route::get('/pemasukan/getAll',"PemasukanController@getAll");
         Route::get('/pemasukan/getByDate',"PemasukanController@getByDate");
 
+        // LIST HUTANG
+        Route::get('/hutang',"HutangController@index");
+        Route::post('/hutang/bayar',"HutangController@bayar");
+        Route::get('/hutang/getAll',"HutangController@getAll");
+        Route::get('/hutang/getByDate',"HutangController@getByDate");
+
         // MEMBER
+        Route::get('/member',"MemberController@index");
+        Route::post('/member/insert',"MemberController@store");
+        Route::put('/member/update',"MemberController@update");
+        Route::get('/member/getAll',"MemberController@getAll");
+        Route::get('/member/getByDate',"MemberController@getByDate");
+        Route::put('/member/getById',"MemberController@getById");
+        Route::delete('/member/delete',"MemberController@delete");
+
+        // Rekening
         Route::get('/member',"MemberController@index");
         Route::post('/member/insert',"MemberController@store");
         Route::put('/member/update',"MemberController@update");

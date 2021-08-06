@@ -16,7 +16,7 @@ class HistoryStokResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'created_at' => Carbon::parse($this->created_at)->diffForHumans(),
+            'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
             'nama_produk' => $this->nama_produk,
             'add_stok' => $this->add_stok,
             'before' => $this->before,

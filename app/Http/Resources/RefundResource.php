@@ -20,7 +20,7 @@ class RefundResource extends JsonResource
             'nama_produk' => $this->nama_produk,
             'jumlah' => $this->jumlah,
             'deskripsi_refund' => $this->deskripsi_refund,
-            'created_at' => Carbon::parse($this->created_at)->diffForHumans()
+            'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s')
         ];
     }
 }

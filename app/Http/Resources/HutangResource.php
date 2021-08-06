@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PemasukanResource extends JsonResource
+class HutangResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,10 +17,11 @@ class PemasukanResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'created_at' => $this->created_at->format('d-m-Y - H:i:s'),
-            'deskripsi_transaksi' => $this->deskripsi_transaksi,
-            'nama' => $this->category_name,
-            'total_harga' => "Rp ".formatRupiah($this->total_harga)
+            'nama' => $this->nama,
+            'deskripsi' => $this->deskripsi,
+            'jumlah' => formatRupiah($this->jumlah),
+            'status' => getStsHutang($this->status),
+            'tanggal' => Carbon::parse($this->created_at)->format("Y-m-d H:i:s")
         ];
     }
 }

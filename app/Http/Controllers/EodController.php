@@ -38,20 +38,20 @@ class EodController extends Controller
                     'admin_tf' => App::call('App\Http\Controllers\JasaTFController@getAdminTF')
                 ]);
 
-                $request = Http::get('https://api.telegram.org/bot1641094965:AAG0kjhFWdBWXnygWwantTOtvjNEtvANiFU/sendMessage',
-                [
-                    'chat_id'=>'-1001368719479',
-                    'parse_mode' => 'HTML',
-                    'text' => 'Toko telah tutup, berikut rincian penghasilannya : 
-                    Omset : '.formatRupiah($sellDay[0]->total_omset).'
-                    Profit : '.formatRupiah($profit).'
-                    Uang TF : '.formatRupiah($uangTF).'
-                    Admin TF : '.formatRupiah(App::call('App\Http\Controllers\JasaTFController@getAdminTF'))
-                ]);
-                $response = $request->getBody();
+                // $request = Http::get('https://api.telegram.org/bot1641094965:AAG0kjhFWdBWXnygWwantTOtvjNEtvANiFU/sendMessage',
+                // [
+                //     'chat_id'=>'-1001466549933',
+                //     'parse_mode' => 'HTML',
+                //     'text' => 'Toko telah tutup, berikut rincian penghasilannya : 
+                //     Omset : '.formatRupiah($sellDay[0]->total_omset).'
+                //     Profit : '.formatRupiah($profit).'
+                //     Uang TF : '.formatRupiah($uangTF).'
+                //     Admin TF : '.formatRupiah(App::call('App\Http\Controllers\JasaTFController@getAdminTF'))
+                // ]);
+                // $response = $request->getBody();
 
                 // UPDATE TRX
-                Transaksi::where("id_eod",0)->update(['id_eod' => $eod->id]);
+                Transaksi::where("id_eod",0)->where("status",1)->update(['id_eod' => $eod->id]);
 
                 //UPDATE JASA TRANSFER
                 JasaTF::where("status",1)->update(['status' => 2]);
@@ -65,7 +65,7 @@ class EodController extends Controller
                     'message' => "Ada kesalahan transaksi, Proses EOD Gagal",
                     'msg' => $e,
                     'error' => true,
-                    'res' => $response
+                    // 'res' => $response
                 ]);
             }
         }else{

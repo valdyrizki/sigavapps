@@ -308,8 +308,6 @@
             })
         }
 
-        
-
         function doRefreshTable(){
             $.getJSON("/jasatf/getAll", function(json){
                 let dataSet = json.data.map(value => Object.values(value));
@@ -322,8 +320,10 @@
                         { title: "No. Rekening" },
                         { title: "Atas Nama" },
                         { title: "Jumlah TF" },
-                        { title: "Biaya Admin" }
+                        { title: "Biaya Admin" },
+                        { title: "Status" }
                     ],
+                    "order": [ 0, 'desc' ]
                 });
             });
             doReset();
@@ -336,7 +336,7 @@
             $('#search_norek').empty();
             $('#search_norek').append($("<option value='0' disabled selected>").text("--- Pilih Rekening ---"));
             $.getJSON("/rekening/getAll", function(json){
-                $.each(json, function(i, obj){
+                $.each(json.data, function(i, obj){
                     $('#search_norek').append($('<option>').text(obj.norek +' - '+obj.an).attr({
                         value: obj.norek,
                         name: obj.an
@@ -375,6 +375,7 @@
             $("#norek").prop('disabled' , false);
             $("#nama").prop('disabled' , false);
             $("#bank").prop('disabled' , false);
+            $('#edit_rekening').hide();
             doLoadRekening();
         }
 

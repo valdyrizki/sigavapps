@@ -21,6 +21,9 @@ class CreateTransaksisTable extends Migration
             $table->string('user')->default("admin");
             $table->integer("id_eod")->default(0);
             $table->smallInteger("type")->default(1)->comment("1 = Transaksi kasir, 2 = Pemasukan, 3 = Pengeluaran, 4 = Jasa Transfer (Default 1)");
+            $table->text('deskripsi_transaksi')->nullable();
+            $table->smallInteger("status")->default(1)->comment("1 = Cash, 2 = Hutang");
+            $table->integer("id_member")->default(0)->comment("0 = Default, lainnya dari table member");
             $table->timestamps();
         });
     }

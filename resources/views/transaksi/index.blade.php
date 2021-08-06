@@ -92,36 +92,89 @@
 
                 <div class="col-md-4 col-sm-12">
                     <div class="card py-3 px-3">
+                        
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                <label>Deskripsi</label>
+                                <textarea class="form-control" name="deskripsi_transaksi" id="deskripsi_transaksi" ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-12">
+                                <!-- select -->
+                                <div class="form-group">
+                                <label>Pembayaran Via</label>
+                                <select class="form-control" name="status" id="status">
+                                    <option value="1" selected>Cash</option>
+                                    <option value="2">Hutang</option>
+                                </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-12">
+                                <!-- select -->
+                                <div class="form-group">
+                                <label>Member</label>
+                                <select class="form-control" height="48" name="id_member" id="id_member">
+                                </select>
+                                </div>
+                            </div>
+                        </div>
 
-                        <h2 class="col-12" id="total_belanja"></h2>
-                        <input type="text" name="moneyInput" id="moneyInput" class="form-control col-sm-12" disabled>
-                        <div class="row mt-1">
+                        <div class="row">
+                            <div class="col-12">
+                                <!-- select -->
+                                <div class="form-group">
+                                <label>Uang</label>
+                                <input type="text" name="moneyInput" id="moneyInput" class="form-control col-sm-12" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        
+        
+                        <div class="row mt-1 mr-2">
                             <button type="button" class="btn btn-success col-sm-2 mr-2 btn-xs" id="m5000" disabled>@currency(5000)</button>
                             <button type="button" class="btn btn-success col-sm-2 mr-2 btn-xs" id="m10000" disabled>@currency(10000)</button>
                             <button type="button" class="btn btn-success col-sm-2 mr-2 btn-xs" id="m20000" disabled>@currency(20000)</button>
                             <button type="button" class="btn btn-success col-sm-2 mr-2 btn-xs" id="m50000" disabled>@currency(50000)</button>
                             <button type="button" class="btn btn-success col-sm-2 mr-2 btn-xs" id="m100000" disabled>@currency(100000)</button>
                         </div>
-
-                        <h2 class="col-sm-12" id="kembalian"></h2>
-                        <button type="button" class="col-sm-12 btn btn-primary mt-2" id="btnSaveData">Proses Transaksi</button>
-
-                        <div class="col-sm-12">
-                                <table id="cart" class="table table-bordered table-hover text-center" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th>Produk</th>
-                                        <th>Jumlah</th>
-                                        <th>Harga</th>
-                                        <th>Total Harga</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
+
+                <div class="col-12">
+                    <div class="card py-3 px-3">
+                        <div class="row">
+                            <div class="col-12">
+                                <table id="cart" class="table table-bordered table-hover text-center">
+                                    <thead>
+                                        <tr>
+                                            <th>Produk</th>
+                                            <th>Jumlah</th>
+                                            <th>Harga</th>
+                                            <th>Total Harga</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <h2 class="col-12" id="total_belanja"></h2>
+                        <h2 class="col-sm-12" id="kembalian"></h2>
+                        <button type="button" class="col-sm-12 btn btn-primary mt-2" id="btnSaveData">Proses Transaksi</button>
+        
+                    </div>
+                </div>
+                
+                    
+
             </div>
         </form>
     </div>
@@ -130,6 +183,7 @@
 
 $(document).ready(function() {
     $('#nama_produk').select2();
+    $('#id_member').select2();
     let saveData = [];
     let detailTransaksi = [];
     let produk = [];
@@ -323,7 +377,10 @@ $(document).ready(function() {
                         url: '/transaksi/insert',
                         data: {
                             "totalHarga" : total_belanja,
-                            "detailTransaksi" : detailTransaksi
+                            "detailTransaksi" : detailTransaksi,
+                            "deskripsi_transaksi" : $('#deskripsi_transaksi').val(),
+                            "status" : $('#status').val(),
+                            "id_member" : $('#id_member').val()
                         }, // or JSON.stringify ({name: 'jonas'}),
                         success: function(data) {
                             Swal.fire({
@@ -340,8 +397,6 @@ $(document).ready(function() {
                             $('#harga_jual').val('');
                             $('#stok').val('');
                             $('#jumlah_beli').val(1);
-
-                            dttable.clear().draw();
                             total_belanja = 0;
                             $("#total_belanja").text("");
                             detailTransaksi = [];
@@ -352,7 +407,7 @@ $(document).ready(function() {
                             $('#m20000').prop("disabled",true);
                             $('#m50000').prop("disabled",true);
                             $('#m100000').prop("disabled",true);
-                            afterGenerate();
+                            doReset();
                         },
                         // contentType: "application/json",
                         dataType: 'JSON'
@@ -375,17 +430,19 @@ $(document).ready(function() {
         $('#jumlah_beli').val(1);
         $('#nama_produk').append($('<option disabled selected>').text("--- Pilih Produk ---"));
         $.getJSON("/produk/get", function(json){
-                produk = json;
-                $.each(json, function(i, obj){
-                    $('#nama_produk').append($('<option>').text(obj.nama_produk).attr({
-                        value: obj.id,
-                        name: obj.nama_produk
-                    }));
-                });
+            produk = json;
+            $.each(json, function(i, obj){
+                $('#nama_produk').append($('<option>').text(obj.nama_produk).attr({
+                    value: obj.id,
+                    name: obj.nama_produk
+                }));
             });
+        });
     }
 
     function doReset(){
+        $("#deskripsi_transaksi").val("");
+        $("#status").val(1);
         $("#deskripsi_produk").val("");
         $("#kategori_produk").val(0);
         $('#nama_produk').empty();
@@ -397,6 +454,7 @@ $(document).ready(function() {
         total_belanja = 0;
         $("#total_belanja").html("Total : "+total_belanja);
         afterGenerate();
+        getMember();
     }
 
     async function getProduk(){
@@ -437,7 +495,20 @@ $(document).ready(function() {
         $("#nama_produk").select2('open');
     }
 
-    afterGenerate();
+    async function getMember(){
+        $('#id_member').empty();
+        $('#id_member').append($('<option disabled selected>').text("--- Pilih Member ---"));
+        await $.getJSON("/member/getAll", function(json){
+            $.each(json.data, function(i, obj){
+                $('#id_member').append($('<option>').text(obj.nama).attr({
+                    value: obj.id,
+                    name: obj.nama
+                }));
+            });
+        });
+    }
+
+    doReset();
     
 } );
     </script>

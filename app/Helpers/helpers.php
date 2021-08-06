@@ -98,3 +98,35 @@ function formatRupiah($expression){
     return number_format($expression,0,',','.');
 }
 
+function getStsTF($expression){
+    $result = 'Aktif';
+    switch ($expression){
+        case 1:
+        $result = 'Aktif';
+        break;
+        case 2:
+        $result = 'EOD';
+        break;
+        case 9:
+        $result = 'Cancel';
+        break;
+        default:
+        $result = "Aktif";
+    }
+    return $result;
+}
+
+function getStsHutang($expression){
+    $result = 'Belum Lunas';
+    switch ($expression){
+        case 0:
+        $result = 'Belum Lunas';
+        break;
+        case 1:
+        $result = 'Lunas';
+        break;
+        default:
+        $result = "Belum Lunas";
+    }
+    return $result;
+}

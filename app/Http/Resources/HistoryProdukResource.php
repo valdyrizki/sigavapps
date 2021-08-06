@@ -22,7 +22,7 @@ class HistoryProdukResource extends JsonResource
             'harga_modal_after' => formatRupiah($this->harga_modal_after),
             'harga_jual_before' => formatRupiah($this->harga_jual_before),
             'harga_jual_after' => formatRupiah($this->harga_jual_after),
-            'created_at' => Carbon::parse($this->created_at)->diffForHumans()
+            'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s')
         ];
     }
 }

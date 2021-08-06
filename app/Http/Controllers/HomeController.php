@@ -76,6 +76,7 @@ class HomeController extends MenuController
         INNER JOIN detail_transaksi A
         ON A.id_transaksi = B.id
         WHERE B.id_eod = 0
+        AND B.status = 1
         AND A.status = 1
         AND A.id_trx_category IN (1,2)
         AND B.type IN (1,4)
@@ -96,6 +97,7 @@ class HomeController extends MenuController
             INNER JOIN transaksi C
             ON A.id_transaksi = C.id
             WHERE C.id_eod = 0
+            AND C.status = 1
             AND A.status = 1
             AND A.id_trx_category = 1
             AND C.type = 1 ) Z
